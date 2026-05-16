@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snapshots</title>
+<style>
+
+/* ── RESET & VARIABLES ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #1A1D23;
+  --bg2:         #1E2229;
+  --bg3:         #22262D;
+  --surface:     #252A33;
+  --surface2:    #2D3340;
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.13);
+  --text:        #D4D8E8;
+  --text2:       #9097A8;
+  --text3:       #5C6270;
+  --accent:      #00C2FF;
+  --green:       #3DD68C;
+  --red:         #FF5F6D;
+  --radius:      8px;
+  --header-h:    44px;
+  --sidebar-w:   260px;
+}
+
+/* ── HOLO OVERRIDES ────────────────────────────────────────────── */
+body[data-style="holo"],
+body[data-style="holo-lite"],
+body[data-style="holo-max"] {
+  --bg:      #060A12;
+  --bg2:     #080D18;
+  --bg3:     #090E1C;
+  --surface: #0C1422;
+  --surface2:#10192E;
+  --border:  rgba(0,229,255,0.10);
+  --border2: rgba(0,229,255,0.22);
+  --text:    #C0DEFF;
+  --text2:   #6899BB;
+  --text3:   #2E5070;
+  --accent:  #00E5FF;
+  --green:   #00FF9F;
+  --red:     #FF3355;
+}
+
+/* ── BASE ──────────────────────────────────────────────────────── */
+html, body {
+  height: 100%; width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 13px;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── TITLE BAR ─────────────────────────────────────────────────── */
+#titlebar {
+  height: var(--header-h);
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 10px 0 14px;
+  gap: 6px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 100;
+}
+#drag-region {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: default;
+  height: 100%;
+}
+#drag-region .icon { font-size: 16px; }
+#titlebar .win-btn {
+  width: 28px; height: 28px;
+  border: none; background: transparent;
+  border-radius: 6px;
+  color: var(--text2);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  outline: none;
+  flex-shrink: 0;
+}
+#titlebar .win-btn:hover { background: var(--surface2); color: var(--text); }
+#titlebar .win-btn.close:hover { background: #c0392b; color: #fff; }
+
+/* ── LAYOUT ────────────────────────────────────────────────────── */
+#layout {
+  display: flex;
+  height: calc(100% - var(--header-h));
+  overflow: hidden;
+}
+
+/* ── SIDEBAR (snapshot list) ───────────────────────────────────── */
+#sidebar {
+  width: var(--sidebar-w);
+  min-width: 200px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+#sidebar-header {
+  padding: 12px 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+#sidebar-header h3 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+.snap-new-row {
+  display: flex; gap: 6px;
+}
+#snap-name-input {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 12px;
+  padding: 5px 8px;
+  outline: none;
+  min-width: 0;
+}
+#snap-name-input:focus { border-color: var(--accent); }
+#snap-name-input::placeholder { color: var(--text3); }
+#btn-save-snap {
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+  outline: none;
+  flex-shrink: 0;
+}
+#btn-save-snap:hover { opacity: 0.85; }
+#btn-save-snap:active { opacity: 0.7; }
+#snap-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+#snap-list::-webkit-scrollbar { width: 4px; }
+#snap-list::-webkit-scrollbar-track { background: transparent; }
+#snap-list::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 2px; }
+
+.snap-item {
+  padding: 9px 12px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.12s, border-color 0.12s;
+  position: relative;
+}
+.snap-item:hover { background: var(--surface); }
+.snap-item.active {
+  background: var(--surface);
+  border-left-color: var(--accent);
+}
+.snap-item-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 22px;
+}
+.snap-item-ts {
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+.snap-item-chaps {
+  font-size: 10px;
+  color: var(--text2);
+  margin-top: 1px;
+}
+.snap-del-btn {
+  position: absolute;
+  top: 50%; right: 8px;
+  transform: translateY(-50%);
+  width: 20px; height: 20px;
+  border: none; background: transparent;
+  color: var(--text3);
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.12s, color 0.12s;
+  outline: none;
+}
+.snap-item:hover .snap-del-btn { opacity: 1; }
+.snap-del-btn:hover { background: rgba(255,95,109,0.18); color: var(--red); }
+
+#sidebar-empty {
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--text3);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ── MAIN PANEL ────────────────────────────────────────────────── */
+#main-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Toolbar row inside main panel */
+#diff-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+  flex-shrink: 0;
+}
+#diff-toolbar label {
+  font-size: 11px;
+  color: var(--text2);
+  white-space: nowrap;
+}
+#chapter-select {
+  flex: 1;
+  max-width: 320px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 12px;
+  padding: 5px 8px;
+  outline: none;
+  cursor: pointer;
+}
+#chapter-select:focus { border-color: var(--accent); }
+#diff-legend {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text2);
+}
+.legend-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 3px;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+.legend-dot.del { background: rgba(255,95,109,0.55); }
+.legend-dot.ins { background: rgba(61,214,140,0.45); }
+
+/* Stats bar */
+#diff-stats {
+  display: flex;
+  gap: 16px;
+  padding: 5px 14px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+#diff-stats span { white-space: nowrap; }
+#diff-stats .stat-hi { color: var(--text); font-weight: 600; }
+
+/* Diff viewport */
+#diff-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px 40px;
+}
+#diff-scroll::-webkit-scrollbar { width: 6px; }
+#diff-scroll::-webkit-scrollbar-track { background: transparent; }
+#diff-scroll::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+
+#diff-view {
+  max-width: 760px;
+  margin: 0 auto;
+  font-family: 'Georgia', 'Palatino Linotype', serif;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Diff spans */
+.diff-del {
+  background: rgba(255, 80, 100, 0.22);
+  color: var(--red);
+  text-decoration: line-through;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.diff-ins {
+  background: rgba(61, 214, 140, 0.18);
+  color: var(--green);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+/* Holo glow on diff spans */
+body[data-style="holo"] .diff-del,
+body[data-style="holo-max"] .diff-del {
+  background: rgba(255, 50, 80, 0.20);
+  text-shadow: 0 0 8px rgba(255,60,90,0.6);
+}
+body[data-style="holo"] .diff-ins,
+body[data-style="holo-max"] .diff-ins {
+  background: rgba(0, 255, 160, 0.14);
+  text-shadow: 0 0 8px rgba(0,255,160,0.5);
+}
+
+/* Empty / placeholder states */
+#diff-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+  color: var(--text3);
+  font-size: 13px;
+  text-align: center;
+  padding: 32px;
+}
+#diff-placeholder .big-icon { font-size: 48px; opacity: 0.35; }
+#diff-placeholder p { max-width: 260px; line-height: 1.6; }
+
+/* Loading spinner */
+#diff-loading {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+  color: var(--text2);
+  font-size: 13px;
+}
+.spinner {
+  width: 22px; height: 22px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Toast notification */
+#snap-toast {
+  position: fixed;
+  bottom: 18px; left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 999;
+  white-space: nowrap;
+}
+#snap-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Holo scan-line title bar */
+body[data-style="holo"] #titlebar,
+body[data-style="holo-max"] #titlebar {
+  background: linear-gradient(180deg, #070E1A 0%, #050B14 100%);
+  border-bottom-color: rgba(0,229,255,0.18);
+}
+body[data-style="holo"] #drag-region .icon,
+body[data-style="holo-max"] #drag-region .icon {
+  filter: drop-shadow(0 0 4px rgba(0,229,255,0.7));
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── TITLE BAR ────────────────────────────────────────── -->
+<div id="titlebar">
+  <div id="drag-region" class="pywebview-drag-region">
+    <span class="icon">📸</span>
+    <span>Revision Snapshots</span>
+  </div>
+  <button class="win-btn" onclick="pywebview.api.minimize_satellite('Snapshots')" title="Minimise">⎯</button>
+  <button class="win-btn close" onclick="closeSelf()" title="Close">✕</button>
+</div>
+
+<!-- ── MAIN LAYOUT ───────────────────────────────────────── -->
+<div id="layout">
+
+  <!-- Sidebar: snapshot list -->
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <h3>Saved Snapshots</h3>
+      <div class="snap-new-row">
+        <input id="snap-name-input" type="text" placeholder="Name this snapshot…" maxlength="60"
+               onkeydown="if(event.key==='Enter')saveSnapshot()">
+        <button id="btn-save-snap" onclick="saveSnapshot()">💾 Save</button>
+      </div>
+    </div>
+    <div id="snap-list"></div>
+  </div>
+
+  <!-- Main: diff viewer -->
+  <div id="main-panel">
+    <div id="diff-toolbar">
+      <label>Compare chapter:</label>
+      <select id="chapter-select" onchange="onChapterChange()">
+        <option value="">— select a chapter —</option>
+      </select>
+      <div id="diff-legend">
+        <span><span class="legend-dot del"></span>Removed</span>
+        <span><span class="legend-dot ins"></span>Added</span>
+      </div>
+    </div>
+    <div id="diff-stats" style="display:none">
+      <span>Words removed: <span class="stat-hi" id="stat-del">0</span></span>
+      <span>Words added: <span class="stat-hi" id="stat-ins">0</span></span>
+      <span>Unchanged: <span class="stat-hi" id="stat-eq">0</span></span>
+    </div>
+
+    <div id="diff-loading"><div class="spinner"></div> Computing diff…</div>
+
+    <div id="diff-scroll">
+      <div id="diff-placeholder">
+        <div class="big-icon">📷</div>
+        <p>Select a snapshot on the left, then choose a chapter to see what changed.</p>
+      </div>
+      <div id="diff-view" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="snap-toast"></div>
+
+<script>
+'use strict';
+
+// ── State ──────────────────────────────────────────────────────
+var _snapshots  = [];
+var _chapters   = [];
+var _activeSnap = null;   // snapshot meta object
+var _activeChap = null;   // chapter id string
+
+// ── Theme ──────────────────────────────────────────────────────
+window.syncTheme = function(theme) {
+  var body = document.body;
+  if (theme === 'holo-lite') {
+    body.setAttribute('data-style', 'holo-lite');
+  } else if (theme === 'holo') {
+    body.setAttribute('data-style', 'holo');
+  } else if (theme === 'holo-max') {
+    body.setAttribute('data-style', 'holo-max');
+  } else {
+    var s = (theme && theme !== 'off') ? theme : 'dark';
+    body.setAttribute('data-style', s);
+  }
+};
+
+// ── Boot ───────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  var injected = window._injectedHoloMode || 'off';
+  syncTheme(injected);
+
+  function _boot() {
+    if (window.pywebview && window.pywebview.api && window.pywebview.api.get_app_theme) {
+      pywebview.api.get_app_theme()
+        .then(function(t) { syncTheme(t || 'off'); })
+        .catch(function() {});
+    }
+    loadData();
+  }
+
+  if (window.pywebview) _boot();
+  else window.addEventListener('pywebviewready', _boot);
+});
+
+// ── Load data ──────────────────────────────────────────────────
+window.loadData = function() {
+  if (!window.pywebview || !window.pywebview.api) return;
+
+  // Load snapshots list
+  pywebview.api.list_snapshots().then(function(list) {
+    _snapshots = list || [];
+    renderSidebar();
+  }).catch(function(e) { console.error('list_snapshots:', e); });
+
+  // Load chapter list from project meta
+  pywebview.api.get_timeline_data().then(function(data) {
+    _chapters = (data && data.chapters) ? data.chapters : [];
+    rebuildChapterSelect();
+  }).catch(function(e) { console.error('get_timeline_data:', e); });
+};
+
+// ── Sidebar ────────────────────────────────────────────────────
+function renderSidebar() {
+  var el = document.getElementById('snap-list');
+  if (!_snapshots.length) {
+    el.innerHTML = '<div id="sidebar-empty">No snapshots yet.<br>Type a name above and click Save.</div>';
+    return;
+  }
+  el.innerHTML = '';
+  _snapshots.forEach(function(snap) {
+    var isActive = _activeSnap && _activeSnap.id === snap.id;
+    var div = document.createElement('div');
+    div.className = 'snap-item' + (isActive ? ' active' : '');
+    div.dataset.id = snap.id;
+
+    var ts = snap.timestamp ? _fmtDate(snap.timestamp) : snap.id;
+    var chapCount = snap.chapters ? snap.chapters.length : 0;
+
+    div.innerHTML =
+      '<div class="snap-item-name">' + _esc(snap.name) + '</div>' +
+      '<div class="snap-item-ts">' + _esc(ts) + '</div>' +
+      '<div class="snap-item-chaps">' + chapCount + ' chapter' + (chapCount !== 1 ? 's' : '') + '</div>' +
+      '<button class="snap-del-btn" title="Delete snapshot" onclick="deleteSnap(event,\'' + snap.id + '\')">✕</button>';
+
+    div.addEventListener('click', function(e) {
+      if (e.target.classList.contains('snap-del-btn')) return;
+      selectSnapshot(snap);
+    });
+    el.appendChild(div);
+  });
+}
+
+function selectSnapshot(snap) {
+  _activeSnap = snap;
+  renderSidebar();
+  // If a chapter is already selected, re-run diff
+  if (_activeChap) loadDiff();
+}
+
+function rebuildChapterSelect() {
+  var sel = document.getElementById('chapter-select');
+  var prev = sel.value;
+  sel.innerHTML = '<option value="">— select a chapter —</option>';
+  _chapters.forEach(function(c) {
+    var opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = c.title || ('Chapter ' + c.id);
+    sel.appendChild(opt);
+  });
+  // Restore previous selection if still valid
+  if (prev) sel.value = prev;
+}
+
+function onChapterChange() {
+  _activeChap = document.getElementById('chapter-select').value || null;
+  if (_activeSnap && _activeChap) loadDiff();
+  else showPlaceholder();
+}
+
+// ── Diff ───────────────────────────────────────────────────────
+function showPlaceholder() {
+  document.getElementById('diff-placeholder').style.display = 'flex';
+  document.getElementById('diff-view').style.display = 'none';
+  document.getElementById('diff-stats').style.display = 'none';
+  document.getElementById('diff-loading').style.display = 'none';
+}
+
+function showLoading() {
+  document.getElementById('diff-placeholder').style.display = 'none';
+  document.getElementById('diff-view').style.display = 'none';
+  document.getElementById('diff-loading').style.display = 'flex';
+}
+
+function loadDiff() {
+  if (!_activeSnap || !_activeChap) return;
+  showLoading();
+
+  pywebview.api.get_snapshot_diff(_activeSnap.id, _activeChap)
+    .then(function(result) {
+      document.getElementById('diff-loading').style.display = 'none';
+      if (!result || !result.success) {
+        toast('Could not load diff');
+        showPlaceholder();
+        return;
+      }
+      renderDiff(result.spans || []);
+    })
+    .catch(function(e) {
+      console.error('get_snapshot_diff:', e);
+      document.getElementById('diff-loading').style.display = 'none';
+      showPlaceholder();
+    });
+}
+
+function renderDiff(spans) {
+  var html   = '';
+  var cntDel = 0, cntIns = 0, cntEq = 0;
+
+  spans.forEach(function(s) {
+    if (s.type === 'equal') {
+      html   += _esc(s.text);
+      cntEq  += _wordCount(s.text);
+    } else if (s.type === 'delete') {
+      html   += '<span class="diff-del">' + _esc(s.text) + '</span>';
+      cntDel += _wordCount(s.text);
+    } else if (s.type === 'insert') {
+      html   += '<span class="diff-ins">' + _esc(s.text) + '</span>';
+      cntIns += _wordCount(s.text);
+    }
+  });
+
+  var view = document.getElementById('diff-view');
+  view.innerHTML = html;
+  view.style.display = 'block';
+
+  document.getElementById('diff-placeholder').style.display = 'none';
+
+  // Stats bar
+  var stats = document.getElementById('diff-stats');
+  stats.style.display = 'flex';
+  document.getElementById('stat-del').textContent = cntDel;
+  document.getElementById('stat-ins').textContent = cntIns;
+  document.getElementById('stat-eq').textContent  = cntEq;
+}
+
+// ── Save snapshot ──────────────────────────────────────────────
+function saveSnapshot() {
+  var nameEl = document.getElementById('snap-name-input');
+  var name   = nameEl.value.trim();
+  if (!name) name = 'Snapshot ' + _fmtDate(new Date().toISOString());
+
+  var btn = document.getElementById('btn-save-snap');
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  pywebview.api.save_snapshot(name)
+    .then(function(res) {
+      btn.disabled = false;
+      btn.textContent = '💾 Save';
+      if (res && res.success) {
+        nameEl.value = '';
+        toast('Snapshot saved: "' + name + '"');
+        pywebview.api.list_snapshots().then(function(list) {
+          _snapshots = list || [];
+          renderSidebar();
+        });
+      } else {
+        toast('Save failed: ' + (res && res.error ? res.error : 'unknown error'));
+      }
+    })
+    .catch(function(e) {
+      btn.disabled = false;
+      btn.textContent = '💾 Save';
+      console.error('save_snapshot:', e);
+    });
+}
+
+// ── Delete snapshot ────────────────────────────────────────────
+function deleteSnap(e, id) {
+  e.stopPropagation();
+  if (!confirm('Delete this snapshot? This cannot be undone.')) return;
+
+  pywebview.api.delete_snapshot(id)
+    .then(function(res) {
+      if (res && res.success) {
+        toast('Snapshot deleted');
+        if (_activeSnap && _activeSnap.id === id) {
+          _activeSnap = null;
+          showPlaceholder();
+        }
+        pywebview.api.list_snapshots().then(function(list) {
+          _snapshots = list || [];
+          renderSidebar();
+        });
+      }
+    })
+    .catch(function(e) { console.error('delete_snapshot:', e); });
+}
+
+// ── Close ──────────────────────────────────────────────────────
+function closeSelf() {
+  if (window.pywebview && window.pywebview.api)
+    pywebview.api.close_satellite_window('Snapshots');
+}
+
+// ── Helpers ────────────────────────────────────────────────────
+function _esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/\n/g,'<br>');
+}
+
+function _wordCount(str) {
+  return (str.match(/\S+/g) || []).length;
+}
+
+function _fmtDate(iso) {
+  try {
+    var d = new Date(iso.replace(' ','T'));
+    if (isNaN(d)) return iso;
+    var mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var h = d.getHours(), m = d.getMinutes();
+    var ampm = h >= 12 ? 'pm' : 'am';
+    h = h % 12 || 12;
+    return mo[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() +
+           ' · ' + h + ':' + String(m).padStart(2,'0') + ampm;
+  } catch(e) { return iso; }
+}
+
+var _toastTimer = null;
+function toast(msg) {
+  var el = document.getElementById('snap-toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function() { el.classList.remove('show'); }, 2800);
+}
+</script>
+</body>
+</html>

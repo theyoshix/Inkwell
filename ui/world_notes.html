@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+
+        /* --- BASE & THEME --- */
+        :root {
+            --bg-main: #1A1D23;
+            --bg-surface: #1F222A;
+            --bg-panel: rgba(30, 33, 40, 0.75);
+            --bg-topbar: rgba(26, 29, 35, 0.97);
+
+            --text-main: #D4D4D4;
+            --text-muted: #7A7A7A;
+
+            --accent: #4DA8E0;
+            --accent-alt: rgba(0, 122, 204, 0.4);
+            --accent-bg: rgba(0, 122, 204, 0.15);
+
+            --border-main: rgba(255, 255, 255, 0.05);
+            --border-light: rgba(255, 255, 255, 0.1);
+
+            --danger: #C42B1C;
+
+            --sb-track: transparent;
+            --sb-thumb: rgba(255,255,255,0.07);
+            --sb-thumb-hover: rgba(255,255,255,0.13);
+        }
+
+        [data-theme="light"] {
+            --bg-main: #E9EAEF;
+            --bg-surface: #FFFFFF;
+            --bg-panel: #F1F2F6;
+            --bg-topbar: #FFFFFF;
+
+            --text-main: #1A1C20;
+            --text-muted: #585F6B;
+
+            --accent: #2563EB;
+            --accent-alt: rgba(37, 99, 235, 0.1);
+            --accent-bg: #DBEAFE;
+
+            --border-main: rgba(0, 0, 0, 0.15);
+            --border-light: rgba(0, 0, 0, 0.25);
+
+            --sb-thumb: rgba(0, 0, 0, 0.2);
+            --sb-thumb-hover: rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- OTHER THEME OVERRIDES ---*/
+        [data-theme="parchment"] {
+            --bg-main: #F4ECD8;      /* Warm aged paper */
+            --bg-surface: #EBE1C9;   /* Slightly darker fold */
+            --bg-panel: rgba(235, 225, 201, 0.75);
+            --bg-topbar: rgba(244, 236, 216, 0.97);
+
+            --text-main: #3C3C3C;    /* Deep ink charcoal */
+            --text-muted: #7D705E;   /* Faded pencil */
+
+            --accent: #A67C52;       /* Leather brown */
+            --accent-alt: rgba(166, 124, 82, 0.4);
+            --accent-bg: rgba(166, 124, 82, 0.15);
+
+            --border-main: rgba(0, 0, 0, 0.05);
+            --border-light: rgba(0, 0, 0, 0.1);
+
+            --sb-thumb: rgba(0,0,0,0.1);
+            --sb-thumb-hover: rgba(0,0,0,0.2);
+        }
+
+        [data-theme="nord"] {
+            --bg-main: #2E3440;      /* Arctic Night */
+            --bg-surface: #3B4252;   /* Polar Dusk */
+            --bg-panel: rgba(46, 52, 64, 0.75);
+            --bg-topbar: rgba(46, 52, 64, 0.97);
+
+            --text-main: #ECEFF4;    /* Snow White */
+            --text-muted: #616E88;   /* Frosty Gray */
+
+            --accent: #88C0D0;       /* Frozen Cyan */
+            --accent-alt: rgba(136, 192, 208, 0.4);
+            --accent-bg: rgba(136, 192, 208, 0.15);
+
+            --border-main: rgba(255, 255, 255, 0.03);
+            --border-light: rgba(255, 255, 255, 0.08);
+
+            --sb-thumb: rgba(255,255,255,0.05);
+            --sb-thumb-hover: rgba(255,255,255,0.1);
+        }
+
+        [data-theme="sakura"] {
+            --bg-main: #2D242F;      /* Deep Midnight Plum */
+            --bg-surface: #382D3A;   /* Muted Grape */
+            --bg-panel: rgba(45, 36, 47, 0.75);
+            --bg-topbar: rgba(45, 36, 47, 0.97);
+
+            --text-main: #F8E1F4;    /* Soft Pinkish White */
+            --text-muted: #8A758D;   /* Dusty Lavender */
+
+            --accent: #D391D3;       /* Bright Sakura */
+            --accent-alt: rgba(211, 145, 211, 0.4);
+            --accent-bg: rgba(211, 145, 211, 0.15);
+
+            --border-main: rgba(255, 255, 255, 0.05);
+            --border-light: rgba(255, 255, 255, 0.1);
+
+            --sb-thumb: rgba(211, 145, 211, 0.1);
+            --sb-thumb-hover: rgba(211, 145, 211, 0.2);
+        }
+
+        [data-theme="forest"] {
+            --bg-main: #141E14;      /* Deep Forest Night */
+            --bg-surface: #1B261B;   /* Mossy Shadow */
+            --bg-panel: rgba(20, 30, 20, 0.75);
+            --bg-topbar: rgba(20, 30, 20, 0.97);
+
+            --text-main: #D1D5DB;    /* Misty Gray */
+            --text-muted: #6B7280;   /* Stone Gray */
+
+            --accent: #4ADE80;       /* Fresh Mint */
+            --accent-alt: rgba(74, 222, 128, 0.4);
+            --accent-bg: rgba(74, 222, 128, 0.15);
+
+            --border-main: rgba(255, 255, 255, 0.03);
+            --border-light: rgba(255, 255, 255, 0.08);
+
+            --sb-thumb: rgba(255,255,255,0.05);
+            --sb-thumb-hover: rgba(255,255,255,0.1);
+        }
+
+        /* --- NEW THEME OVERRIDES (Inkwell v2) --- */
+        [data-theme="vellum"] {
+            --bg-main: #E8E0CF; --bg-surface: #E0D6C0;
+            --bg-panel: rgba(216,206,184,0.85); --bg-topbar: rgba(232,224,207,0.97);
+            --text-main: #2C2418; --text-muted: #6B5D48;
+            --accent: #8B5E3C; --accent-alt: rgba(139,94,60,0.35); --accent-bg: rgba(139,94,60,0.12);
+            --border-main: rgba(0,0,0,0.06); --border-light: rgba(0,0,0,0.12);
+            --sb-thumb: rgba(0,0,0,0.15); --sb-thumb-hover: rgba(0,0,0,0.25);
+        }
+        [data-theme="midnight"] {
+            --bg-main: #070A18; --bg-surface: #111530;
+            --bg-panel: rgba(13,16,37,0.85); --bg-topbar: rgba(7,10,24,0.97);
+            --text-main: #C8D8F8; --text-muted: #445068;
+            --accent: #7BA7F0; --accent-alt: rgba(123,167,240,0.35); --accent-bg: rgba(123,167,240,0.12);
+            --border-main: rgba(123,167,240,0.06); --border-light: rgba(123,167,240,0.12);
+            --sb-thumb: rgba(123,167,240,0.1); --sb-thumb-hover: rgba(123,167,240,0.2);
+        }
+        [data-theme="crimson"] {
+            --bg-main: #0E0808; --bg-surface: #1C1010;
+            --bg-panel: rgba(22,12,12,0.85); --bg-topbar: rgba(14,8,8,0.97);
+            --text-main: #F0D8D8; --text-muted: #684848;
+            --accent: #C44D3A; --accent-alt: rgba(196,77,58,0.35); --accent-bg: rgba(196,77,58,0.12);
+            --border-main: rgba(196,77,58,0.08); --border-light: rgba(196,77,58,0.15);
+            --sb-thumb: rgba(196,77,58,0.12); --sb-thumb-hover: rgba(196,77,58,0.22);
+        }
+        [data-theme="monochrome"] {
+            --bg-main: #080808; --bg-surface: #181818;
+            --bg-panel: rgba(17,17,17,0.85); --bg-topbar: rgba(8,8,8,0.97);
+            --text-main: #C8C8C8; --text-muted: #484848;
+            --accent: #A0A0A0; --accent-alt: rgba(160,160,160,0.3); --accent-bg: rgba(160,160,160,0.1);
+            --border-main: rgba(255,255,255,0.05); --border-light: rgba(255,255,255,0.1);
+            --sb-thumb: rgba(255,255,255,0.08); --sb-thumb-hover: rgba(255,255,255,0.15);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- TOP BAR (LOCKED) --- */
+        .top-bar {
+            background: var(--bg-topbar);
+            height: 48px; min-height: 48px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 0 0 15px;
+            border-bottom: 1px solid var(--border-main);
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .window-controls { display: flex; align-items: center; height: 48px; -webkit-app-region: no-drag; justify-content: flex-end; }
+        .wc-btn { width: 46px; height: 48px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--text-muted); font-size: 13px; cursor: pointer; padding: 0; transition: background 0.15s ease, color 0.15s ease; }
+        .wc-btn:hover { background: var(--border-light); color: var(--text-main); }
+        .wc-close:hover { background: #C42B1C !important; color: #FFFFFF !important; }
+        .wc-btn.pinned { color: var(--accent) !important; background: var(--accent-bg) !important; }
+
+        /* ── HOLOGRAM THEME ─────────────────────────────────────── */
+        [data-style^="holo"] {
+            --bg-main:        #000810;
+            --bg-surface:     #001428;
+            --bg-panel:       rgba(0, 18, 40, 0.92);
+            --bg-topbar:      rgba(0, 6, 16, 0.96);
+            --text-main:      #A8E8FF;
+            --text-muted:     #2D6880;
+            --accent:         #00E5FF;
+            --accent-alt:     rgba(0, 229, 255, 0.15);
+            --accent-bg:      rgba(0, 229, 255, 0.08);
+            --border-main:    rgba(0, 229, 255, 0.08);
+            --border-light:   rgba(0, 229, 255, 0.18);
+            --sb-thumb:       rgba(0, 229, 255, 0.18);
+            --sb-thumb-hover: rgba(0, 229, 255, 0.38);
+        }
+        [data-style^="holo"] .top-bar {
+            border-bottom: 1px solid rgba(0, 229, 255, 0.14) !important;
+            box-shadow: 0 1px 14px rgba(0, 229, 255, 0.06);
+        }
+        [data-style^="holo"] .pywebview-drag-region {
+            color: #00E5FF !important;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.55);
+        }
+        [data-style^="holo"] .codex-sidebar {
+            border-right: 1px solid rgba(0, 229, 255, 0.10) !important;
+        }
+        [data-style^="holo"] .sidebar-header {
+            border-bottom: 1px solid rgba(0, 229, 255, 0.08) !important;
+        }
+        [data-style^="holo"] .category-list li.active {
+            background: rgba(0, 229, 255, 0.12) !important;
+            color: #00E5FF !important;
+            border-left: 2px solid rgba(0, 229, 255, 0.6) !important;
+        }
+        [data-style^="holo"] #noteTitle {
+            color: #00E5FF !important;
+            border-bottom-color: rgba(0, 229, 255, 0.30) !important;
+        }
+        [data-style^="holo"] ::-webkit-scrollbar { width: 2px; height: 2px; }
+        [data-style^="holo"] ::-webkit-scrollbar-thumb {
+            background: rgba(0, 229, 255, 0.28);
+            border-radius: 0;
+            box-shadow: 0 0 4px rgba(0, 229, 255, 0.5);
+        }
+        [data-style^="holo"] ::-webkit-scrollbar-track { background: transparent; }
+        [data-style^="holo"] .wc-btn.pinned {
+            color: #00E5FF !important;
+            background: rgba(0, 229, 255, 0.10) !important;
+        }
+
+        /* --- CSS GRID CODEX LAYOUT --- */
+        .codex-container {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            flex-grow: 1;
+            height: calc(100vh - 48px);
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .codex-sidebar {
+            background: var(--bg-main);
+            border-right: 1px solid var(--border-main);
+            display: flex; flex-direction: column;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 15px; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold;
+        }
+        .category-list, .note-list { list-style: none; padding: 0; margin: 0; }
+        .category-list li, .note-list li {
+            padding: 10px 15px; cursor: pointer; font-size: 13px; color: var(--text-muted); border-left: 3px solid transparent; transition: all 0.2s;
+        }
+        .category-list li:hover, .note-list li:hover { background: var(--border-main); color: var(--text-main); }
+        .category-list li.active, .note-list li.active { background: var(--accent-bg); color: var(--accent); border-left-color: var(--accent); }
+        .add-note-btn { margin: 15px; padding: 10px; background: transparent; color: var(--accent); border: 1px dashed var(--accent); border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .add-note-btn:hover { background: var(--accent-bg); }
+
+        /* EDITOR PANE (The Floating Canvas) */
+        .codex-editor {
+            background: var(--bg-surface);
+            display: flex; flex-direction: column;
+            margin: 20px;
+            padding: 35px 50px;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-main);
+            overflow-y: auto;
+        }
+        .editor-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 20px; padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-light);
+            transition: border-color 0.3s;
+        }
+        .editor-header:focus-within {
+            border-bottom-color: var(--accent-alt);
+        }
+        .note-title-input {
+            flex-grow: 1; background: transparent; border: none; color: var(--text-main);
+            font-size: 32px; font-weight: bold;
+            outline: none; font-family: Georgia, serif;
+        }
+        .delete-note-btn {
+            background: transparent; border: 1px solid transparent; color: var(--text-muted);
+            font-size: 18px; cursor: pointer; padding: 6px 10px; border-radius: 6px;
+            transition: all 0.2s; margin-left: 15px;
+        }
+        .delete-note-btn:hover {
+            background: rgba(196, 43, 28, 0.1); color: #C42B1C; border-color: rgba(196, 43, 28, 0.3);
+        }
+        .note-content-input {
+            flex-grow: 1; background: transparent; border: none;
+            color: var(--text-main); font-size: 16px; line-height: 1.8;
+            outline: none; resize: none; font-family: Georgia, serif;
+            padding-right: 15px;
+        }
+
+        /* --- DYNAMIC TEMPLATE FIELDS --- */
+        .dynamic-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .dynamic-field {
+            display: flex;
+            flex-direction: column;
+        }
+        .dynamic-field label {
+            font-size: 11px; color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 1.5px; margin-bottom: 6px; font-weight: bold;
+        }
+        .dynamic-field input {
+            background: var(--bg-panel); border: 1px solid var(--border-main);
+            color: var(--text-main); padding: 10px 12px; border-radius: 6px;
+            font-family: 'Segoe UI', sans-serif; font-size: 13px;
+            outline: none; transition: all 0.2s;
+        }
+        .dynamic-field input:focus {
+            border-color: var(--accent-alt); background: var(--bg-main);
+        }
+
+        /* --- CUSTOM SCROLLBARS --- */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--sb-track); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--sb-thumb);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--sb-thumb-hover);
+        }
+
+        /* --- RESIZE ZONES --- */
+        .resize-r { position: fixed; right: 0; top: 48px; width: 12px; height: calc(100vh - 48px); cursor: ew-resize; z-index: 99999; }
+        .resize-b { position: fixed; bottom: 0; left: 0; width: 100vw; height: 12px; cursor: ns-resize; z-index: 99999; }
+        .resize-br { position: fixed; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 100000; }
+
+        /* --- CUSTOM MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 48px; left: 0; width: 100vw; height: calc(100vh - 48px);
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(2px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 90000;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-box {
+            background: var(--bg-surface); border: 1px solid var(--border-light);
+            border-radius: 8px; padding: 25px; width: 320px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            display: flex; flex-direction: column; gap: 15px;
+            transform: translateY(10px); transition: transform 0.2s;
+        }
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+
+        .modal-title { color: var(--text-main); font-size: 16px; font-weight: bold; }
+        .modal-text { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+
+        .modal-btn {
+            padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;
+            font-size: 13px; font-weight: bold; transition: 0.2s;
+        }
+        .cancel-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border-light); }
+        .cancel-btn:hover { background: var(--border-main); color: var(--text-main); }
+        .confirm-btn { background: #C42B1C; color: #fff; }
+        .confirm-btn:hover { background: #E81123; }
+
+        /* --- SEARCH BAR --- */
+        .search-container {
+            padding: 10px 12px 8px;
+            border-bottom: 1px solid var(--border-main);
+            flex-shrink: 0;
+        }
+        .search-wrap {
+            position: relative; display: flex; align-items: center;
+        }
+        .search-icon {
+            position: absolute; left: 8px; font-size: 11px;
+            color: var(--text-muted); pointer-events: none; line-height: 1;
+        }
+        #sidebarSearch {
+            width: 100%; box-sizing: border-box;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-main);
+            border-radius: 5px;
+            padding: 6px 28px 6px 26px;
+            color: var(--text-main);
+            font-size: 12px; outline: none;
+            transition: border-color 0.2s, background 0.2s;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        #sidebarSearch:focus {
+            border-color: var(--accent) !important;
+            background: var(--bg-main) !important;
+        }
+        #sidebarSearch::placeholder { color: var(--text-muted); }
+        #search-clear {
+            position: absolute; right: 7px; font-size: 12px;
+            color: var(--text-muted); cursor: pointer; display: none;
+            background: none; border: none; padding: 2px 4px; line-height: 1;
+        }
+        #search-clear:hover { color: var(--text-main); }
+        #search-count {
+            font-size: 10px; color: var(--text-muted);
+            text-align: right; margin-top: 4px;
+            min-height: 14px; letter-spacing: 0.02em;
+        }
+        [data-style^="holo"] #sidebarSearch {
+            background: rgba(0,229,255,0.03);
+            border-color: rgba(0,229,255,0.12);
+            color: rgba(180,240,255,0.9);
+            caret-color: #00E5FF;
+        }
+        [data-style^="holo"] #sidebarSearch:focus {
+            border-color: rgba(0,229,255,0.5) !important;
+            box-shadow: 0 0 0 2px rgba(0,229,255,0.08);
+        }
+        [data-style^="holo"] .search-icon { color: rgba(0,229,255,0.4); }
+        [data-style^="holo"] #search-count { color: rgba(0,229,255,0.3); }
+
+        /* Category match badge */
+        .cat-badge {
+            margin-left: auto; font-size: 9px; font-weight: 700;
+            background: var(--accent-bg); color: var(--accent);
+            border-radius: 8px; padding: 1px 6px; letter-spacing: 0.04em;
+        }
+        .category-list li { display: flex; align-items: center; }
+        .cat-name { flex: 1; }
+
+        /* Cross-category search group header */
+        .search-group-header {
+            font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--text-muted);
+            padding: 10px 15px 4px; pointer-events: none;
+        }
+        [data-style^="holo"] .search-group-header { color: rgba(0,229,255,0.3); }
+
+        /* Highlighted match text */
+        .search-match { background: rgba(255,210,0,0.25); border-radius: 2px; }
+        [data-style^="holo"] .search-match {
+            background: rgba(0,229,255,0.2);
+            color: rgba(0,229,255,0.95);
+        }
+
+        /* No results message */
+        .search-empty {
+            padding: 20px 15px; font-size: 12px;
+            color: var(--text-muted); text-align: center; line-height: 1.5;
+        }
+
+        /* --- TIPTAP EDITOR STYLES --- */
+        .tt-toolbar {
+            display: flex;
+            gap: 2px;
+            padding: 4px 6px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-main);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            flex-wrap: wrap;
+        }
+        .tt-btn {
+            padding: 3px 9px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            transition: all 0.15s;
+            line-height: 1.5;
+        }
+        .tt-btn:hover, .tt-btn.is-active {
+            background: var(--accent-bg);
+            border-color: var(--accent-alt);
+            color: var(--accent);
+        }
+        .tt-sep {
+            display: inline-block;
+            width: 1px;
+            background: var(--border-light);
+            margin: 2px 4px;
+            align-self: stretch;
+        }
+        .tt-editor-lore {
+            flex-grow: 1;
+            background: transparent;
+            border: 1px solid var(--border-main);
+            border-radius: 0 0 4px 4px;
+            padding: 12px 15px;
+            cursor: text;
+            transition: border-color 0.2s;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        .tt-editor-lore:focus-within {
+            border-color: var(--accent-alt);
+        }
+        .tt-editor-lore .ProseMirror {
+            outline: none;
+            color: var(--text-main);
+            font-family: Georgia, serif;
+            font-size: 16px;
+            line-height: 1.8;
+            flex-grow: 1;
+            min-height: 180px;
+        }
+        .tt-editor-lore .ProseMirror p { margin: 0 0 0.6em 0; }
+        .tt-editor-lore .ProseMirror p:last-child { margin-bottom: 0; }
+        .tt-editor-lore .ProseMirror h2 {
+            color: var(--accent);
+            font-size: 1.3em;
+            margin: 1em 0 0.4em 0;
+        }
+        .tt-editor-lore .ProseMirror h3 {
+            color: var(--text-main);
+            font-size: 1.1em;
+            margin: 0.8em 0 0.3em 0;
+        }
+        .tt-editor-lore .ProseMirror ul,
+        .tt-editor-lore .ProseMirror ol {
+            padding-left: 1.5em;
+            margin: 0.4em 0;
+        }
+        .tt-editor-lore .ProseMirror blockquote {
+            border-left: 3px solid var(--accent-alt);
+            margin: 0.4em 0 0.4em 1em;
+            padding-left: 1em;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        .tt-editor-lore .ProseMirror > p:first-child:empty::before {
+            content: 'Write your lore, descriptions, and extended history here...';
+            color: var(--text-muted);
+            pointer-events: none;
+            float: left;
+            height: 0;
+        }
+        .tt-wn-btn {
+            padding: 3px 9px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            transition: all 0.15s;
+            line-height: 1.5;
+        }
+        .tt-wn-btn:hover, .tt-wn-btn.is-active {
+            background: var(--accent-bg);
+            border-color: var(--accent-alt);
+            color: var(--accent);
+        }
+
+        /* --- WORLD NOTES DROPZONE --- */
+        .world-dropzone {
+            width: 100%; height: 160px;
+            background: var(--bg-panel);
+            border: 2px dashed var(--border-light);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; position: relative;
+            margin-bottom: 20px; transition: all 0.2s ease;
+        }
+        .world-dropzone.dragover {
+            border-color: var(--accent);
+            background: var(--accent-bg);
+        }
+        .world-dropzone img {
+            max-width: 100%; max-height: 100%; object-fit: contain; z-index: 2;
+        }
+        .w-dropzone-text {
+            position: absolute; text-align: center; color: var(--text-muted); z-index: 1; pointer-events: none;
+        }
+
+        /* --- MINI THUMBNAILS FOR LIST --- */
+        .note-avatar-mini {
+            width: 24px; height: 24px; border-radius: 4px; object-fit: cover;
+            margin-right: 10px; display: inline-block; flex-shrink: 0;
+        }
+        .note-list li {
+            display: flex; align-items: center;
+        }
+
+        /* ─── Custom Tooltip ─────────────────────────────────────────── */
+        #ik-tip {
+            position: fixed; z-index: 999999; pointer-events: none;
+            background: rgba(18, 20, 28, 0.96); color: #CDD0E0;
+            font-size: 11px; font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 5px 9px; border-radius: 5px; white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.45);
+            opacity: 0; transition: opacity 0.12s; letter-spacing: 0.02em;
+            max-width: 240px; white-space: normal; line-height: 1.4;
+        }
+        #ik-tip.visible { opacity: 1; }
+        [data-style^="holo"] #ik-tip {
+            background: rgba(2, 8, 20, 0.97); color: #A8E8FF;
+            border-color: rgba(0, 229, 255, 0.2);
+            box-shadow: 0 0 12px rgba(0,229,255,0.08), 0 4px 16px rgba(0,0,0,0.5);
+        }
+    </style>
+    <script>
+    /* Apply holo skin synchronously before first paint — no flash */
+    (function() {
+        var m = window._injectedHoloMode || 'off';
+        if (m !== 'off') document.documentElement.setAttribute('data-style', m);
+    })();
+    </script>
+    <script type="module">
+        import { Editor } from 'https://esm.sh/@tiptap/core@2';
+        import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2';
+        import Underline from 'https://esm.sh/@tiptap/extension-underline@2';
+        window._TipTap = { Editor, StarterKit, Underline };
+        document.dispatchEvent(new CustomEvent('tiptap-loaded'));
+    </script>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="pywebview-drag-region" style="-webkit-app-region: drag; flex-grow: 1; height: 100%; display: flex; align-items: center; color: var(--accent); font-weight: bold; letter-spacing: 1px; font-size: 12px; cursor: default;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" style="vertical-align:-1px;margin-right:5px"><circle cx="7" cy="7" r="6"/><ellipse cx="7" cy="7" rx="2.8" ry="6"/><line x1="1" y1="7" x2="13" y2="7"/><line x1="2" y1="4" x2="12" y2="4"/><line x1="2" y1="10" x2="12" y2="10"/></svg> WORLD NOTES
+        </div>
+        <div class="window-controls">
+            <button class="wc-btn" id="notesPinBtn" onclick="toggleNotesPin()" data-tip="Pin window (always on top)" style="font-size:11px;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 1h3l.5 3.5L11 6v1H7.5L7 12H6L5.5 7H2V6l2.5-1.5z"/><line x1="6.5" y1="7" x2="6.5" y2="12"/></svg></button>
+            <button class="wc-btn" onclick="minNotes()" data-tip="Minimize">─</button>
+            <button class="wc-btn" onclick="maxNotes()" data-tip="Maximize">□</button>
+            <button class="wc-btn wc-close" onclick="closeNotes()" data-tip="Close">✕</button>
+        </div>
+    </div>
+
+    <div class="codex-container">
+        <div class="codex-sidebar">
+            <div class="search-container">
+                <div class="search-wrap">
+                    <span class="search-icon">⌕</span>
+                    <input type="text" id="sidebarSearch" placeholder="Search all entries…" autocomplete="off" spellcheck="false">
+                    <button id="search-clear" title="Clear">✕</button>
+                </div>
+                <div id="search-count"></div>
+            </div>
+
+            <div class="sidebar-header">Categories</div>
+            <ul class="category-list">
+                <li class="active"><span class="cat-name">Locations</span><span class="cat-badge" style="display:none"></span></li>
+                <li><span class="cat-name">Factions</span><span class="cat-badge" style="display:none"></span></li>
+                <li><span class="cat-name">Lore</span><span class="cat-badge" style="display:none"></span></li>
+                <li><span class="cat-name">Items</span><span class="cat-badge" style="display:none"></span></li>
+            </ul>
+
+            <div class="sidebar-header">Entries</div>
+            <button class="add-note-btn" id="addNoteBtn">+ New Entry</button>
+            <ul class="note-list" id="notesList"></ul>
+        </div>
+
+        <div class="codex-editor" id="editorArea" style="opacity: 0; pointer-events: none; transition: opacity 0.2s;">
+            <div class="editor-header">
+                <input type="text" class="note-title-input" id="noteTitle" placeholder="Entry Title...">
+                <button class="delete-note-btn" id="deleteNoteBtn" data-tip="Delete Entry"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5,3.5 12.5,3.5"/><path d="M4.5 3.5V2.5h5v1"/><path d="M2.5 3.5l.9 8.1a1 1 0 0 0 1 .9h5.2a1 1 0 0 0 1-.9l.9-8.1"/></svg></button>
+            </div>
+
+            <div id="dynamicFieldsContainer" class="dynamic-fields"></div>
+
+            <div id="worldDropZone" class="world-dropzone">
+                <img id="w-image-preview" src="" style="display: none;">
+                <div class="w-dropzone-text" id="wDropzoneText">
+                    <span style="display:block;margin-bottom:4px;color:var(--accent)"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="18" height="6" rx="1"/><path d="M11 2v9m-4-3.5L11 11l4-3.5"/></svg></span>
+                    Drag & Drop Reference Image<br>
+                    <span style="font-size: 10px; color: var(--text-muted);">(Maps, Crests, Concept Art)</span>
+                </div>
+            </div>
+            <input type="hidden" id="w-image-filename" value="">
+
+            <div class="tt-toolbar" id="note-toolbar">
+                <button class="tt-wn-btn" data-wn="bold"><b>B</b></button>
+                <button class="tt-wn-btn" data-wn="italic"><i>I</i></button>
+                <button class="tt-wn-btn" data-wn="underline"><u>U</u></button>
+                <button class="tt-wn-btn" data-wn="strike"><s>S</s></button>
+                <span class="tt-sep"></span>
+                <button class="tt-wn-btn" data-wn="h2">H2</button>
+                <button class="tt-wn-btn" data-wn="h3">H3</button>
+                <span class="tt-sep"></span>
+                <button class="tt-wn-btn" data-wn="bulletList">• List</button>
+                <button class="tt-wn-btn" data-wn="blockquote">❝</button>
+                <span class="tt-sep"></span>
+                <button class="tt-wn-btn" data-wn="clearFormatting">✕</button>
+            </div>
+            <div id="noteContent" class="tt-editor-lore"></div>
+        </div>
+    </div>  <div class="modal-overlay" id="deleteModal">
+        <div class="modal-box">
+            <div class="modal-title">Delete Entry?</div>
+            <div class="modal-text">Are you sure you want to delete this entry? This action cannot be undone.</div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel-btn" onclick="closeDeleteModal()">Cancel</button>
+                <button class="modal-btn confirm-btn" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="resize-r" onmousedown="initResize(event, 2)"></div>
+    <div class="resize-b" onmousedown="initResize(event, 6)"></div>
+    <div class="resize-br" onmousedown="initResize(event, 8)"></div>
+
+    <script>
+        window.syncTheme = function(newTheme) {
+            if (newTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', newTheme);
+            }
+        };
+
+        window.syncHoloMode = function(mode) {
+            if (!mode || mode === 'off') {
+                document.documentElement.removeAttribute('data-style');
+            } else {
+                document.documentElement.setAttribute('data-style', mode);
+            }
+        };
+
+        // --- WINDOW CONTROLS ---
+        function minNotes()   { if(window.pywebview) window.pywebview.api.minimize_satellite('World Notes'); }
+        function maxNotes()   { if(window.pywebview) window.pywebview.api.maximize_satellite('World Notes'); }
+        function closeNotes() { if(window.pywebview) window.pywebview.api.close_satellite_window('World Notes'); }
+
+        var _notesPinned = false;
+        function toggleNotesPin() {
+            _notesPinned = !_notesPinned;
+            var btn = document.getElementById('notesPinBtn');
+            if (btn) {
+                btn.classList.toggle('pinned', _notesPinned);
+                btn.dataset.tip = _notesPinned ? 'Unpin window' : 'Pin window (always on top)';
+            }
+            if (window.pywebview && window.pywebview.api)
+                window.pywebview.api.toggle_pin('World Notes', _notesPinned);
+        }
+
+        // --- 2. DATA ENGINE ---
+        let worldData = { "Locations": [], "Factions": [], "Lore": [], "Items": [] };
+        let currentCategory = 'Locations';
+        let activeIndex = -1;
+        let noteEditor = null;
+        let _wnTtReady = false;
+
+        function initNoteEditor() {
+            if (!window._TipTap || noteEditor) return;
+            const { Editor, StarterKit, Underline } = window._TipTap;
+            const el = document.getElementById('noteContent');
+            if (!el) return;
+            noteEditor = new Editor({
+                element: el,
+                extensions: [StarterKit, Underline],
+                content: '',
+                onUpdate: function() { handleTypingFromEditor(); },
+                onTransaction: function(ctx) {
+                    document.querySelectorAll('.tt-wn-btn').forEach(function(btn) {
+                        var cmd = btn.dataset.wn;
+                        var active =
+                            cmd === 'bold'      ? ctx.editor.isActive('bold') :
+                            cmd === 'italic'    ? ctx.editor.isActive('italic') :
+                            cmd === 'underline' ? ctx.editor.isActive('underline') :
+                            cmd === 'strike'    ? ctx.editor.isActive('strike') :
+                            cmd === 'h2'        ? ctx.editor.isActive('heading', { level: 2 }) :
+                            cmd === 'h3'        ? ctx.editor.isActive('heading', { level: 3 }) :
+                            cmd === 'bulletList'? ctx.editor.isActive('bulletList') :
+                            cmd === 'blockquote'? ctx.editor.isActive('blockquote') : false;
+                        btn.classList.toggle('is-active', active);
+                    });
+                }
+            });
+
+            document.querySelectorAll('.tt-wn-btn').forEach(function(btn) {
+                btn.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                    if (!noteEditor) return;
+                    var cmd   = btn.dataset.wn;
+                    var chain = noteEditor.chain().focus();
+                    if      (cmd === 'bold')             chain.toggleBold().run();
+                    else if (cmd === 'italic')           chain.toggleItalic().run();
+                    else if (cmd === 'underline')        chain.toggleUnderline().run();
+                    else if (cmd === 'strike')           chain.toggleStrike().run();
+                    else if (cmd === 'h2')               chain.toggleHeading({ level: 2 }).run();
+                    else if (cmd === 'h3')               chain.toggleHeading({ level: 3 }).run();
+                    else if (cmd === 'bulletList')       chain.toggleBulletList().run();
+                    else if (cmd === 'blockquote')       chain.toggleBlockquote().run();
+                    else if (cmd === 'clearFormatting')  chain.clearNodes().unsetAllMarks().run();
+                });
+            });
+        }
+
+        document.addEventListener('tiptap-loaded', function() {
+            _wnTtReady = true;
+            initNoteEditor();
+        });
+
+        // --- NEW MODULAR BOOTSTRAP ---
+        window.addEventListener('pywebviewready', function() {
+            window.pywebview.api.get_project_lore().then(db => {
+                if (db && db.world_notes) {
+                    // Sync the global worldData object
+                    worldData = Object.assign(worldData, db.world_notes);
+                }
+                renderNotes();
+            });
+        });
+
+        document.querySelectorAll('.category-list li').forEach(function(li) {
+            li.addEventListener('click', function() {
+                // Clear search when switching categories
+                var inp = document.getElementById('sidebarSearch');
+                if (inp) inp.value = '';
+                document.querySelectorAll('.category-list li').forEach(function(el) { el.classList.remove('active'); });
+                li.classList.add('active');
+                var nameSpan = li.querySelector('.cat-name');
+                currentCategory = nameSpan ? nameSpan.textContent.trim() : li.textContent.trim();
+                activeIndex = -1;
+                document.getElementById('editorArea').style.opacity = '0';
+                document.getElementById('editorArea').style.pointerEvents = 'none';
+                renderNotes();
+            });
+        });
+
+        // --- SEARCH HELPERS ---
+        function _escHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+        function _highlight(text, term) {
+            if (!term) return _escHtml(text);
+            var idx = text.toLowerCase().indexOf(term.toLowerCase());
+            if (idx === -1) return _escHtml(text);
+            return _escHtml(text.slice(0, idx)) +
+                   '<span class="search-match">' + _escHtml(text.slice(idx, idx + term.length)) + '</span>' +
+                   _highlight(text.slice(idx + term.length), term);
+        }
+        function _stripHtml(html) {
+            var tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.textContent || '';
+        }
+        function _updateCategoryBadges(term) {
+            document.querySelectorAll('.category-list li').forEach(function(li) {
+                var nameSpan = li.querySelector('.cat-name');
+                var badge    = li.querySelector('.cat-badge');
+                if (!nameSpan || !badge) return;
+                var cat = nameSpan.textContent.trim();
+                if (!term) { badge.style.display = 'none'; return; }
+                var notes = worldData[cat] || [];
+                var q = term.toLowerCase();
+                var count = notes.filter(function(n) {
+                    return (n.title || '').toLowerCase().includes(q) ||
+                           _stripHtml(n.content || '').toLowerCase().includes(q);
+                }).length;
+                if (count > 0) { badge.textContent = count; badge.style.display = ''; }
+                else { badge.style.display = 'none'; }
+            });
+        }
+        function _clearSearch() {
+            var inp = document.getElementById('sidebarSearch');
+            if (inp) { inp.value = ''; inp.focus(); }
+            renderNotes();
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            var inp = document.getElementById('sidebarSearch');
+            var clr = document.getElementById('search-clear');
+            if (inp) inp.addEventListener('input', renderNotes);
+            if (clr) clr.addEventListener('click', _clearSearch);
+        });
+
+        function _buildNoteListItem(note, index, cat, term) {
+            var li = document.createElement('li');
+            li.className = (cat === currentCategory && index === activeIndex) ? 'active' : '';
+            // Thumbnail
+            var img = document.createElement('img');
+            img.className = 'note-avatar-mini';
+            img.style.display = 'none';
+            var src = note.image || '';
+            if (src.startsWith('http') || src.startsWith('data:')) {
+                img.src = src; img.style.display = 'block';
+            } else if (src && window.pywebview && window.pywebview.api) {
+                window.pywebview.api.load_image_asset(src).then(function(b64) {
+                    if (b64) { img.src = b64; img.style.display = 'block'; }
+                });
+            }
+            // Title with match highlight
+            var span = document.createElement('span');
+            span.innerHTML = _highlight(note.title || 'Untitled', term);
+            li.appendChild(img);
+            li.appendChild(span);
+            li.onclick = function() {
+                // If cross-category result, switch active category first
+                if (cat !== currentCategory) {
+                    document.querySelectorAll('.category-list li').forEach(function(el) {
+                        el.classList.remove('active');
+                        var ns = el.querySelector('.cat-name');
+                        if (ns && ns.textContent.trim() === cat) el.classList.add('active');
+                    });
+                    currentCategory = cat;
+                }
+                loadNote(index);
+            };
+            return li;
+        }
+
+        function renderNotes() {
+            var list      = document.getElementById('notesList');
+            var inp       = document.getElementById('sidebarSearch');
+            var clearBtn  = document.getElementById('search-clear');
+            var countEl   = document.getElementById('search-count');
+            var term      = inp ? inp.value.trim() : '';
+
+            if (clearBtn) clearBtn.style.display = term ? 'block' : 'none';
+            list.innerHTML = '';
+
+            if (term) {
+                // Cross-category search mode
+                var total = 0;
+                Object.keys(worldData).forEach(function(cat) {
+                    var notes   = worldData[cat] || [];
+                    var q       = term.toLowerCase();
+                    var matches = [];
+                    notes.forEach(function(note, idx) {
+                        if ((note.title || '').toLowerCase().includes(q) ||
+                            _stripHtml(note.content || '').toLowerCase().includes(q)) {
+                            matches.push({ note: note, index: idx });
+                        }
+                    });
+                    if (matches.length === 0) return;
+                    var header = document.createElement('div');
+                    header.className = 'search-group-header';
+                    header.textContent = cat;
+                    list.appendChild(header);
+                    matches.forEach(function(m) {
+                        list.appendChild(_buildNoteListItem(m.note, m.index, cat, term));
+                        total++;
+                    });
+                });
+                if (total === 0) {
+                    var empty = document.createElement('div');
+                    empty.className = 'search-empty';
+                    empty.textContent = 'No entries match "' + term + '"';
+                    list.appendChild(empty);
+                }
+                if (countEl) countEl.textContent = total > 0 ? total + ' result' + (total === 1 ? '' : 's') : '';
+                _updateCategoryBadges(term);
+            } else {
+                // Normal mode: current category only
+                if (countEl) countEl.textContent = '';
+                _updateCategoryBadges('');
+                if (!worldData[currentCategory]) return;
+                worldData[currentCategory].forEach(function(note, idx) {
+                    list.appendChild(_buildNoteListItem(note, idx, currentCategory, ''));
+                });
+            }
+        }
+
+        // --- THE BLUEPRINTS ---
+        const templateSchema = {
+            "Locations": [
+                { id: "region", label: "Region" },
+                { id: "climate", label: "Climate" },
+                { id: "rulingPower", label: "Ruling Power" },
+                { id: "additionalInfo", label: "Additional Information" }
+            ],
+            "Factions": [
+                { id: "currentLeader", label: "Current Leader" },
+                { id: "seatOfPower", label: "Seat of Power" },
+                { id: "rivals", label: "Rivals" },
+                { id: "additionalInfo", label: "Additional Information" }
+            ],
+            "Items": [
+                { id: "origin", label: "Origin" },
+                { id: "composition", label: "Composition" },
+                { id: "properties", label: "Properties" },
+                { id: "owners", label: "Owners" }
+            ],
+            "Lore": [] // Left blank intentionally
+        };
+
+        // --- LOAD & RENDER NOTE ---
+        function loadNote(index) {
+            if (!noteEditor) {
+                setTimeout(function() { loadNote(index); }, 80);
+                return;
+            }
+            activeIndex = index;
+            const note = worldData[currentCategory][index];
+
+            // 1. Load the fixed fields
+            document.getElementById('noteTitle').value = note.title || '';
+            noteEditor.commands.setContent(note.content || '');
+
+            // 2. Build the Dynamic Fields
+            const container = document.getElementById('dynamicFieldsContainer');
+            container.innerHTML = ''; // Wipe out the old fields
+            const schema = templateSchema[currentCategory];
+
+            if (schema && schema.length > 0) {
+                container.style.display = 'grid'; // Turn the grid back on
+
+                // Generate the custom boxes for this category
+                schema.forEach(field => {
+                    let wrapper = document.createElement('div');
+                    wrapper.className = 'dynamic-field';
+
+                    let label = document.createElement('label');
+                    label.textContent = field.label;
+
+                    let input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = 'Unknown...';
+                    input.value = note[field.id] || ''; // Load saved data if it exists
+
+                    // Auto-save this specific field when you type
+                    input.addEventListener('input', (e) => {
+                        worldData[currentCategory][activeIndex][field.id] = e.target.value;
+                        saveData();
+                    });
+
+                    wrapper.appendChild(label);
+                    wrapper.appendChild(input);
+                    container.appendChild(wrapper);
+                });
+            } else {
+                // If it's "Lore" (empty schema), hide the template container entirely
+                container.style.display = 'none';
+            }
+
+            // --- 3. LOAD IMAGE PREVIEW (The New Engine) ---
+            const filename = note.image || '';
+            document.getElementById('w-image-filename').value = filename;
+            const img = document.getElementById('w-image-preview');
+            const text = document.getElementById('wDropzoneText');
+
+            if (!filename) {
+                img.style.display = 'none';
+                text.style.display = 'block';
+            } else if (filename.startsWith('http') || filename.startsWith('data:')) {
+                img.src = filename;
+                img.style.display = 'block';
+                text.style.display = 'none';
+            } else {
+                // Ask Python for the local file
+                window.pywebview.api.load_image_asset(filename).then(base64data => {
+                    if (base64data) {
+                        img.src = base64data;
+                        img.style.display = 'block';
+                        text.style.display = 'none';
+                    } else {
+                        img.style.display = 'none';
+                        text.style.display = 'block';
+                    }
+                });
+            }
+
+            // Reveal the editor
+            document.getElementById('editorArea').style.opacity = '1';
+            document.getElementById('editorArea').style.pointerEvents = 'auto';
+            renderNotes();
+        }
+
+        document.getElementById('addNoteBtn').onclick = () => {
+            if (!worldData[currentCategory]) worldData[currentCategory] = [];
+            worldData[currentCategory].push({ title: "New Entry", content: "" });
+            loadNote(worldData[currentCategory].length - 1);
+            saveData();
+        };
+
+        function handleTyping() {
+            if (activeIndex === -1) return;
+            worldData[currentCategory][activeIndex].title = document.getElementById('noteTitle').value;
+            renderNotes();
+            saveData();
+        }
+
+        function handleTypingFromEditor() {
+            if (activeIndex === -1 || !noteEditor) return;
+            worldData[currentCategory][activeIndex].content = noteEditor.getHTML();
+            saveData();
+        }
+
+        document.getElementById('noteTitle').addEventListener('input', handleTyping);
+
+        function saveData() {
+            if (window.pywebview && window.pywebview.api) {
+                window.pywebview.api.save_world_notes(worldData);
+            }
+        }
+
+        // Delete a Note (Triggers Custom Modal)
+        document.getElementById('deleteNoteBtn').onclick = () => {
+            if (activeIndex === -1) return;
+            document.getElementById('deleteModal').classList.add('active');
+        };
+
+        // Cancel Deletion
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+        }
+
+        // Confirm Deletion
+        function confirmDelete() {
+            if (activeIndex === -1) return;
+
+            // 1. Splice (remove) the item
+            // Shred the image if it exists
+                const noteToDelete = worldData[currentCategory][activeIndex];
+                if (noteToDelete && noteToDelete.image && !noteToDelete.image.startsWith('http') && !noteToDelete.image.startsWith('data:')) {
+                    window.pywebview.api.delete_image_asset(noteToDelete.image);
+                }
+            worldData[currentCategory].splice(activeIndex, 1);
+
+            // 2. Save to Python
+            saveData();
+
+            // 3. Clear UI
+            activeIndex = -1;
+            document.getElementById('editorArea').style.opacity = '0';
+            document.getElementById('editorArea').style.pointerEvents = 'none';
+
+            // 4. Redraw and close modal
+            renderNotes();
+            closeDeleteModal();
+        }
+
+        // --- 3. RESIZE ENGINE ---
+        let isResizing = false;
+        let resDir = 0;
+        let isEngineBusy = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        function initResize(e, dir) {
+            isResizing = true; resDir = dir;
+            offsetX = window.innerWidth - e.clientX;
+            offsetY = window.innerHeight - e.clientY;
+            document.addEventListener('mousemove', doResize);
+            document.addEventListener('mouseup', stopResize);
+            e.preventDefault();
+        }
+
+        function doResize(e) {
+            if (!isResizing) return;
+            if (!isEngineBusy && window.pywebview && window.pywebview.api) {
+                isEngineBusy = true; 
+                let nW = window.innerWidth; let nH = window.innerHeight;
+                if (resDir === 2 || resDir === 8) nW = e.clientX + offsetX;
+                if (resDir === 6 || resDir === 8) nH = e.clientY + offsetY;
+
+                let scale = window.devicePixelRatio || 1;
+                let targetW = Math.round(nW * scale);
+                let targetH = Math.round(nH * scale);
+
+                window.pywebview.api.resize_satellite('World Notes', targetW, targetH).then(() => {
+                    isEngineBusy = false; 
+                }).catch(() => {
+                    isEngineBusy = false; 
+                });
+            }
+        }
+
+        function stopResize() {
+            isResizing = false;
+            document.removeEventListener('mousemove', doResize);
+            document.removeEventListener('mouseup', stopResize);
+        }
+
+        // --- DRAG AND DROP ENGINE ---
+        const wDropZone = document.getElementById('worldDropZone');
+
+        wDropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            wDropZone.classList.add('dragover');
+        });
+
+        wDropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            wDropZone.classList.remove('dragover');
+        });
+
+        wDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            wDropZone.classList.remove('dragover');
+
+            if (activeIndex === null) return;
+
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                document.getElementById('wDropzoneText').innerHTML = "Saving...";
+
+                reader.onload = (event) => {
+                    const dataUrl = event.target.result;
+                    window.pywebview.api.save_image_asset(dataUrl, file.name).then(filename => {
+                        if (filename) {
+                            document.getElementById('w-image-filename').value = filename;
+                            document.getElementById('wDropzoneText').innerHTML = '<span style="display:block;margin-bottom:4px;color:var(--accent)"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="18" height="6" rx="1"/><path d="M11 2v9m-4-3.5L11 11l4-3.5"/></svg></span>Drag &amp; Drop Reference Image<br><span style="font-size: 10px; color: var(--text-muted);">(Maps, Crests, Concept Art)</span>';
+
+                            // Save the new filename to the active note
+                            worldData[currentCategory][activeIndex].image = filename;
+                            saveData();
+                            loadNote(activeIndex); // Refresh to display the image
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ── Custom tooltip engine ──────────────────────────────────────
+        (function() {
+            var tip = document.createElement('div');
+            tip.id = 'ik-tip';
+            document.body.appendChild(tip);
+            var _tid = null;
+
+            document.addEventListener('mouseover', function(e) {
+                var el = e.target.closest('[data-tip]');
+                if (!el) return;
+                clearTimeout(_tid);
+                tip.textContent = el.dataset.tip;
+                _tid = setTimeout(function() {
+                    var r = el.getBoundingClientRect();
+                    var left = r.left + r.width / 2;
+                    var top  = r.bottom + 6;
+                    tip.style.left = '0px'; tip.style.top = '0px';
+                    tip.style.visibility = 'hidden'; tip.style.opacity = '0';
+                    tip.classList.add('visible');
+                    var tw = tip.offsetWidth, th = tip.offsetHeight;
+                    left = Math.max(8, Math.min(left - tw/2, window.innerWidth - tw - 8));
+                    if (top + th > window.innerHeight - 8) top = r.top - th - 6;
+                    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+                    tip.style.visibility = ''; tip.classList.add('visible');
+                }, 280);
+            });
+
+            document.addEventListener('mouseout', function(e) {
+                var el = e.target.closest('[data-tip]');
+                if (!el) return;
+                clearTimeout(_tid);
+                tip.classList.remove('visible');
+            });
+
+            document.addEventListener('mousedown', function() {
+                clearTimeout(_tid);
+                tip.classList.remove('visible');
+            });
+        })();
+    </script>
+</body>
+</html>

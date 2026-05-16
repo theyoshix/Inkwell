@@ -1,0 +1,19 @@
+{
+    "ai_mode": "local",
+    "ai_api_key": "",
+    "ai_local_url": "http://localhost:1234/v1",
+    "theme": "dark",
+    "holo_mode": "off",
+    "last_project_path": "",
+    "last_project_name": "",
+    "backup_folder": "",
+    "backup_keep": 5,
+    "last_backup_ts": "",
+    "recent_projects": [],
+    "banner_image_path": "",
+    "banner_height": 260,
+    "banner_scale": 100,
+    "banner_pos_y": 0,
+    "open_satellites": [],
+    "update_check_url": ""
+}

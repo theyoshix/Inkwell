@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* ── THEME VARIABLES ────────────────────────────────────────────── */
+        :root {
+            --bg-main:    #1A1D23;  --bg-surface: #1F222A;
+            --bg-panel:   rgba(30,33,40,0.75);  --bg-topbar: rgba(26,29,35,0.97);
+            --text-main:  #D4D4D4; --text-muted: #7A7A7A;
+            --accent:     #4DA8E0; --accent-alt: rgba(0,122,204,0.4);
+            --accent-bg:  rgba(0,122,204,0.12);
+            --border-main: rgba(255,255,255,0.05); --border-light: rgba(255,255,255,0.1);
+            --sb-track: transparent; --sb-thumb: rgba(255,255,255,0.07);
+            --sb-thumb-hover: rgba(255,255,255,0.13);
+        }
+        [data-theme="light"] {
+            --bg-main:#E9EAEF; --bg-surface:#FFFFFF; --bg-panel:#F1F2F6; --bg-topbar:#FFFFFF;
+            --text-main:#1A1C20; --text-muted:#585F6B; --accent:#2563EB;
+            --accent-alt:rgba(37,99,235,0.1); --accent-bg:#DBEAFE;
+            --border-main:rgba(0,0,0,0.15); --border-light:rgba(0,0,0,0.25);
+            --sb-thumb:rgba(0,0,0,0.2); --sb-thumb-hover:rgba(0,0,0,0.3);
+        }
+        [data-theme="parchment"] {
+            --bg-main:#F4ECD8; --bg-surface:#EBE1C9; --bg-panel:rgba(235,225,201,0.75); --bg-topbar:rgba(244,236,216,0.97);
+            --text-main:#3C3C3C; --text-muted:#7D705E; --accent:#A67C52;
+            --accent-alt:rgba(166,124,82,0.4); --accent-bg:rgba(166,124,82,0.15);
+            --border-main:rgba(0,0,0,0.05); --border-light:rgba(0,0,0,0.1);
+        }
+        [data-theme="nord"] {
+            --bg-main:#2E3440; --bg-surface:#3B4252; --bg-panel:rgba(46,52,64,0.75); --bg-topbar:rgba(46,52,64,0.97);
+            --text-main:#ECEFF4; --text-muted:#616E88; --accent:#88C0D0;
+            --accent-alt:rgba(136,192,208,0.4); --accent-bg:rgba(136,192,208,0.15);
+            --border-main:rgba(255,255,255,0.03); --border-light:rgba(255,255,255,0.08);
+        }
+        [data-theme="sakura"] {
+            --bg-main:#2D242F; --bg-surface:#382D3A; --bg-panel:rgba(45,36,47,0.75); --bg-topbar:rgba(45,36,47,0.97);
+            --text-main:#F8E1F4; --text-muted:#8A758D; --accent:#D391D3;
+            --accent-alt:rgba(211,145,211,0.4); --accent-bg:rgba(211,145,211,0.15);
+            --border-main:rgba(255,255,255,0.05); --border-light:rgba(255,255,255,0.1);
+        }
+        [data-theme="forest"] {
+            --bg-main:#141E14; --bg-surface:#1B261B; --bg-panel:rgba(20,30,20,0.75); --bg-topbar:rgba(20,30,20,0.97);
+            --text-main:#D1D5DB; --text-muted:#6B7280; --accent:#4ADE80;
+            --accent-alt:rgba(74,222,128,0.4); --accent-bg:rgba(74,222,128,0.15);
+            --border-main:rgba(255,255,255,0.03); --border-light:rgba(255,255,255,0.08);
+        }
+        [data-theme="vellum"] {
+            --bg-main:#E8E0CF; --bg-surface:#E0D6C0; --bg-panel:rgba(216,206,184,0.85); --bg-topbar:rgba(232,224,207,0.97);
+            --text-main:#2C2418; --text-muted:#6B5D48; --accent:#8B5E3C;
+            --accent-alt:rgba(139,94,60,0.35); --accent-bg:rgba(139,94,60,0.12);
+            --border-main:rgba(0,0,0,0.06); --border-light:rgba(0,0,0,0.12);
+        }
+        [data-theme="midnight"] {
+            --bg-main:#070A18; --bg-surface:#111530; --bg-panel:rgba(13,16,37,0.85); --bg-topbar:rgba(7,10,24,0.97);
+            --text-main:#C8D8F8; --text-muted:#445068; --accent:#7BA7F0;
+            --accent-alt:rgba(123,167,240,0.35); --accent-bg:rgba(123,167,240,0.12);
+            --border-main:rgba(123,167,240,0.06); --border-light:rgba(123,167,240,0.12);
+        }
+        [data-theme="crimson"] {
+            --bg-main:#0E0808; --bg-surface:#1C1010; --bg-panel:rgba(22,12,12,0.85); --bg-topbar:rgba(14,8,8,0.97);
+            --text-main:#F0D8D8; --text-muted:#684848; --accent:#C44D3A;
+            --accent-alt:rgba(196,77,58,0.35); --accent-bg:rgba(196,77,58,0.12);
+            --border-main:rgba(196,77,58,0.08); --border-light:rgba(196,77,58,0.15);
+        }
+        [data-theme="monochrome"] {
+            --bg-main:#080808; --bg-surface:#181818; --bg-panel:rgba(17,17,17,0.85); --bg-topbar:rgba(8,8,8,0.97);
+            --text-main:#C8C8C8; --text-muted:#484848; --accent:#A0A0A0;
+            --accent-alt:rgba(160,160,160,0.3); --accent-bg:rgba(160,160,160,0.1);
+            --border-main:rgba(255,255,255,0.05); --border-light:rgba(255,255,255,0.1);
+        }
+        [data-style^="holo"] {
+            --bg-main:#000810; --bg-surface:#001428; --bg-panel:rgba(0,18,40,0.92); --bg-topbar:rgba(0,6,16,0.96);
+            --text-main:#A8E8FF; --text-muted:#2D6880; --accent:#00E5FF;
+            --accent-alt:rgba(0,229,255,0.15); --accent-bg:rgba(0,229,255,0.08);
+            --border-main:rgba(0,229,255,0.08); --border-light:rgba(0,229,255,0.18);
+            --sb-thumb:rgba(0,229,255,0.18); --sb-thumb-hover:rgba(0,229,255,0.38);
+        }
+
+        /* ── BASE ───────────────────────────────────────────────────────── */
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 0;
+            background: var(--bg-main); color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--sb-thumb); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--sb-thumb-hover); }
+        [data-style^="holo"] ::-webkit-scrollbar { width: 2px; }
+        [data-style^="holo"] ::-webkit-scrollbar-thumb {
+            background: rgba(0,229,255,0.28); border-radius: 0;
+            box-shadow: 0 0 4px rgba(0,229,255,0.5);
+        }
+        button, input { outline: none; }
+        button:focus-visible { outline: 2px solid var(--accent); }
+
+        /* ── TOP BAR ────────────────────────────────────────────────────── */
+        .top-bar {
+            background: var(--bg-topbar); height: 48px; min-height: 48px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 0 0 15px; border-bottom: 1px solid var(--border-main);
+            user-select: none; flex-shrink: 0;
+        }
+        .wc-btn {
+            width: 46px; height: 48px; display: flex; align-items: center;
+            justify-content: center; background: transparent; border: none;
+            color: var(--text-muted); font-size: 13px; cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .wc-btn:hover { background: var(--border-light); color: var(--text-main); }
+        .wc-close:hover { background: #C42B1C !important; color: #FFF !important; }
+        [data-style^="holo"] .top-bar {
+            border-bottom: 1px solid rgba(0,229,255,0.14) !important;
+            box-shadow: 0 1px 14px rgba(0,229,255,0.06);
+        }
+        [data-style^="holo"] .title-label { color: #00E5FF !important; text-shadow: 0 0 10px rgba(0,229,255,0.55); }
+
+        /* ── SCROLL BODY ─────────────────────────────────────────────────── */
+        .stats-body {
+            flex: 1; overflow-y: auto; padding: 20px 24px 24px;
+            display: flex; flex-direction: column; gap: 16px;
+        }
+
+        /* ── CARD ────────────────────────────────────────────────────────── */
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-main);
+            border-radius: 8px; padding: 16px 18px;
+        }
+        .card-title {
+            font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;
+        }
+        [data-style^="holo"] .stat-card {
+            border-color: rgba(0,229,255,0.1);
+            box-shadow: inset 0 0 20px rgba(0,229,255,0.02);
+        }
+        [data-style^="holo"] .card-title { color: rgba(0,229,255,0.4); }
+
+        /* ── KPI ROW ─────────────────────────────────────────────────────── */
+        .kpi-row { display: flex; gap: 12px; }
+        .kpi {
+            flex: 1; background: var(--bg-panel);
+            border: 1px solid var(--border-main);
+            border-radius: 6px; padding: 12px 14px;
+            display: flex; flex-direction: column; gap: 4px; min-width: 0;
+        }
+        .kpi-value {
+            font-size: 26px; font-weight: 700;
+            color: var(--accent); font-variant-numeric: tabular-nums;
+            line-height: 1.1; letter-spacing: -0.02em;
+        }
+        .kpi-label { font-size: 10px; color: var(--text-muted); }
+        .kpi-sub   { font-size: 9px; color: var(--text-muted); opacity: 0.7; }
+        [data-style^="holo"] .kpi-value {
+            text-shadow: 0 0 12px rgba(0,229,255,0.6);
+        }
+
+        /* ── GOAL PROGRESS ──────────────────────────────────────────────── */
+        .goal-track {
+            height: 6px; background: var(--border-main);
+            border-radius: 3px; overflow: hidden; margin-top: 8px;
+        }
+        .goal-fill {
+            height: 100%; width: 0%; border-radius: 3px;
+            background: var(--accent); transition: width 0.8s ease;
+        }
+        .goal-fill.reached { background: #4ADE80; }
+        [data-style^="holo"] .goal-fill { box-shadow: 0 0 6px rgba(0,229,255,0.5); }
+        [data-style^="holo"] .goal-fill.reached { background: #FFD700; box-shadow: 0 0 8px rgba(255,215,0,0.7); }
+        .goal-label { font-size: 10px; color: var(--text-muted); margin-top: 5px; }
+
+        /* ── WEEK BAR CHART ─────────────────────────────────────────────── */
+        .week-chart {
+            display: flex; align-items: flex-end; gap: 5px;
+            height: 80px; padding: 0 2px;
+        }
+        .wc-col {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; gap: 4px; height: 100%;
+        }
+        .wc-bar-wrap {
+            flex: 1; width: 100%; display: flex; align-items: flex-end;
+        }
+        .wc-bar {
+            width: 100%; border-radius: 2px 2px 0 0;
+            background: var(--accent-bg); min-height: 2px;
+            transition: height 0.6s ease;
+            position: relative;
+        }
+        .wc-bar.today { background: var(--accent); opacity: 0.85; }
+        .wc-bar.has-goal { background: var(--accent); }
+        [data-style^="holo"] .wc-bar.today { box-shadow: 0 0 8px rgba(0,229,255,0.4); }
+        .wc-day {
+            font-size: 8px; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.04em;
+            flex-shrink: 0;
+        }
+        .wc-day.today { color: var(--accent); font-weight: 700; }
+        .wc-count {
+            font-size: 8px; color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+        }
+        .wc-count.today { color: var(--accent); }
+
+        /* ── HEATMAP ─────────────────────────────────────────────────────── */
+        .heatmap-grid {
+            display: grid; grid-template-columns: repeat(24, 1fr);
+            gap: 2px; height: 28px;
+        }
+        .heat-cell {
+            border-radius: 2px; min-height: 28px;
+            background: var(--border-main); transition: background 0.3s;
+            position: relative; cursor: default;
+        }
+        .heat-cell:hover::after {
+            content: attr(data-tip);
+            position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+            background: var(--bg-panel); border: 1px solid var(--border-light);
+            color: var(--text-main); font-size: 9px; padding: 3px 7px;
+            border-radius: 3px; white-space: nowrap; z-index: 100; pointer-events: none;
+        }
+        .heatmap-labels {
+            display: grid; grid-template-columns: repeat(24, 1fr);
+            gap: 2px; margin-top: 3px;
+        }
+        .heat-lbl {
+            font-size: 7px; color: var(--text-muted);
+            text-align: center; overflow: hidden;
+        }
+
+        /* ── PB TABLE ────────────────────────────────────────────────────── */
+        .pb-table { display: flex; flex-direction: column; gap: 8px; }
+        .pb-row {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 10px; background: var(--bg-panel);
+            border-radius: 5px; border: 1px solid var(--border-main);
+        }
+        .pb-icon { font-size: 15px; flex-shrink: 0; }
+        .pb-desc { flex: 1; font-size: 12px; color: var(--text-main); }
+        .pb-val  { font-size: 14px; font-weight: 700; color: var(--accent);
+                   font-variant-numeric: tabular-nums; }
+
+        /* ── RESIZE ZONES ────────────────────────────────────────────────── */
+        .resize-r  { position: fixed; right: 0; top: 48px; width: 12px; height: calc(100vh - 48px); cursor: ew-resize; z-index: 99999; }
+        .resize-b  { position: fixed; bottom: 0; left: 0; width: 100vw; height: 12px; cursor: ns-resize; z-index: 99999; }
+        .resize-br { position: fixed; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 100000; }
+    </style>
+    <script>
+    (function() {
+        var m = window._injectedHoloMode || 'off';
+        if (m !== 'off') document.documentElement.setAttribute('data-style', m);
+    })();
+    </script>
+</head>
+<body>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="pywebview-drag-region" style="-webkit-app-region:drag;flex-grow:1;height:100%;display:flex;align-items:center;gap:8px;cursor:default;">
+            <span class="title-label" style="color:var(--accent);font-weight:bold;letter-spacing:1px;font-size:12px;">📊 WRITING STATS</span>
+        </div>
+        <div style="display:flex;align-items:center;height:48px;-webkit-app-region:no-drag;">
+            <button class="wc-btn" onclick="minStats()">─</button>
+            <button class="wc-btn" onclick="maxStats()">□</button>
+            <button class="wc-btn wc-close" onclick="closeStats()">✕</button>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="stats-body" id="stats-body">
+
+        <!-- TODAY + STREAK KPIs -->
+        <div class="stat-card">
+            <div class="card-title">Today</div>
+            <div class="kpi-row">
+                <div class="kpi">
+                    <div class="kpi-value" id="kpi-today">—</div>
+                    <div class="kpi-label">words today</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-value" id="kpi-streak">—</div>
+                    <div class="kpi-label">day streak</div>
+                    <div class="kpi-sub" id="kpi-streak-best">best: —</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-value" id="kpi-alltime">—</div>
+                    <div class="kpi-label">words all‑time</div>
+                </div>
+            </div>
+            <!-- Goal progress bar (hidden if no goal set) -->
+            <div id="goal-section" style="display:none; margin-top:14px;">
+                <div class="goal-track"><div class="goal-fill" id="goal-fill"></div></div>
+                <div class="goal-label" id="goal-label"></div>
+            </div>
+        </div>
+
+        <!-- WEEK CHART -->
+        <div class="stat-card">
+            <div class="card-title">Last 7 Days</div>
+            <div class="week-chart" id="week-chart"></div>
+        </div>
+
+        <!-- PERSONAL BESTS -->
+        <div class="stat-card">
+            <div class="card-title">Personal Bests</div>
+            <div class="pb-table">
+                <div class="pb-row">
+                    <span class="pb-icon">📅</span>
+                    <span class="pb-desc">Most words in a day</span>
+                    <span class="pb-val" id="pb-day">—</span>
+                </div>
+                <div class="pb-row">
+                    <span class="pb-icon">✍️</span>
+                    <span class="pb-desc">Longest session</span>
+                    <span class="pb-val" id="pb-session">—</span>
+                </div>
+                <div class="pb-row">
+                    <span class="pb-icon">🚀</span>
+                    <span class="pb-desc">Fastest WPM</span>
+                    <span class="pb-val" id="pb-wpm">—</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOURLY HEATMAP -->
+        <div class="stat-card">
+            <div class="card-title">Productivity by Hour</div>
+            <div class="heatmap-grid" id="heatmap-grid"></div>
+            <div class="heatmap-labels" id="heatmap-labels"></div>
+        </div>
+
+    </div>
+
+    <!-- RESIZE ZONES -->
+    <div class="resize-r"  onmousedown="initResize(event,2)"></div>
+    <div class="resize-b"  onmousedown="initResize(event,6)"></div>
+    <div class="resize-br" onmousedown="initResize(event,8)"></div>
+
+    <script>
+        window.syncTheme = function(t) {
+            if (t === 'dark') document.documentElement.removeAttribute('data-theme');
+            else document.documentElement.setAttribute('data-theme', t);
+        };
+        window.syncHoloMode = function(m) {
+            if (!m || m === 'off') document.documentElement.removeAttribute('data-style');
+            else document.documentElement.setAttribute('data-style', m);
+        };
+
+        function minStats()   { if (window.pywebview) window.pywebview.api.minimize_satellite('Writing Stats'); }
+        function maxStats()   { if (window.pywebview) window.pywebview.api.maximize_satellite('Writing Stats'); }
+        function closeStats() { if (window.pywebview) window.pywebview.api.close_satellite_window('Writing Stats'); }
+
+        /* ── Helpers ─────────────────────────────────────────────────── */
+        function _fmt(n) {
+            if (n === undefined || n === null) return '—';
+            n = parseInt(n) || 0;
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+            if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+            return String(n);
+        }
+        function _dayLabel(iso) {
+            var days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+            var d = new Date(iso + 'T12:00:00');
+            return days[d.getDay()];
+        }
+        function _isToday(iso) {
+            return iso === new Date().toISOString().slice(0, 10);
+        }
+        function _hourLabel(h) {
+            var n = parseInt(h);
+            if (n === 0)  return '12a';
+            if (n < 12)   return n + 'a';
+            if (n === 12) return '12p';
+            return (n - 12) + 'p';
+        }
+
+        /* ── Render ──────────────────────────────────────────────────── */
+        function renderStats(stats) {
+            if (!stats) return;
+
+            /* ── KPIs ── */
+            document.getElementById('kpi-today').textContent   = _fmt(stats.today_count);
+            document.getElementById('kpi-streak').textContent  = stats.current_streak || 0;
+            document.getElementById('kpi-streak-best').textContent = 'best: ' + (stats.longest_streak || 0);
+
+            var total = 0;
+            Object.values(stats.daily_counts || {}).forEach(function(v) { total += v; });
+            document.getElementById('kpi-alltime').textContent = _fmt(total);
+
+            /* ── Goal bar ── */
+            var goal = stats.word_goal || 0;
+            var goalSec = document.getElementById('goal-section');
+            if (goal > 0) {
+                goalSec.style.display = 'block';
+                var gpct = Math.min(1, (stats.today_count || 0) / goal);
+                var fillEl = document.getElementById('goal-fill');
+                fillEl.style.width = (gpct * 100).toFixed(1) + '%';
+                fillEl.classList.toggle('reached', gpct >= 1);
+                var remaining = Math.max(0, goal - (stats.today_count || 0));
+                document.getElementById('goal-label').textContent =
+                    gpct >= 1
+                        ? '✓ Daily goal reached (' + _fmt(goal) + ' words)'
+                        : _fmt(remaining) + ' words to reach today\'s goal of ' + _fmt(goal);
+            } else {
+                goalSec.style.display = 'none';
+            }
+
+            /* ── Week chart ── */
+            var weekEl  = document.getElementById('week-chart');
+            weekEl.innerHTML = '';
+            var week = stats.week || [];
+            var maxWc = Math.max(1, Math.max.apply(null, week.map(function(d) { return d.count; })));
+            week.forEach(function(day) {
+                var col = document.createElement('div');
+                col.className = 'wc-col';
+                var barWrap = document.createElement('div');
+                barWrap.className = 'wc-bar-wrap';
+                var bar = document.createElement('div');
+                var today = _isToday(day.date);
+                bar.className = 'wc-bar' + (today ? ' today' : (day.count > 0 ? ' has-goal' : ''));
+                var pct = day.count / maxWc;
+                bar.style.height = (pct * 100).toFixed(1) + '%';
+                bar.title = day.date + ': ' + day.count + ' words';
+                barWrap.appendChild(bar);
+                var dayLbl = document.createElement('div');
+                dayLbl.className = 'wc-day' + (today ? ' today' : '');
+                dayLbl.textContent = _dayLabel(day.date);
+                var cntLbl = document.createElement('div');
+                cntLbl.className = 'wc-count' + (today ? ' today' : '');
+                cntLbl.textContent = day.count > 0 ? _fmt(day.count) : '';
+                col.appendChild(barWrap);
+                col.appendChild(dayLbl);
+                col.appendChild(cntLbl);
+                weekEl.appendChild(col);
+            });
+
+            /* ── Personal bests ── */
+            var pb = stats.personal_bests || {};
+            document.getElementById('pb-day').textContent     = _fmt(pb.most_words_day)     + ' w';
+            document.getElementById('pb-session').textContent = _fmt(pb.longest_session_words) + ' w';
+            document.getElementById('pb-wpm').textContent     = (pb.fastest_wpm || '—') + (pb.fastest_wpm ? ' WPM' : '');
+
+            /* ── Heatmap ── */
+            var hmGrid   = document.getElementById('heatmap-grid');
+            var hmLabels = document.getElementById('heatmap-labels');
+            hmGrid.innerHTML = '';
+            hmLabels.innerHTML = '';
+            var hourly = stats.hourly_counts || {};
+            var maxH = Math.max(1, Math.max.apply(null, Object.values(hourly).map(Number)));
+            for (var h = 0; h < 24; h++) {
+                var cnt  = parseInt(hourly[String(h)] || 0);
+                var cell = document.createElement('div');
+                cell.className = 'heat-cell';
+                var opacity = cnt > 0 ? 0.12 + (cnt / maxH) * 0.78 : 0;
+                cell.style.background = cnt > 0
+                    ? 'rgba(var(--heat-r,77),var(--heat-g,168),var(--heat-b,224),' + opacity.toFixed(2) + ')'
+                    : 'var(--border-main)';
+                cell.setAttribute('data-tip', _hourLabel(h) + ': ' + cnt + ' words');
+                hmGrid.appendChild(cell);
+                var lbl = document.createElement('div');
+                lbl.className = 'heat-lbl';
+                lbl.textContent = (h % 6 === 0) ? _hourLabel(h) : '';
+                hmLabels.appendChild(lbl);
+            }
+            /* Apply correct accent colour to heatmap cells via inline vars */
+            _applyHeatColour();
+        }
+
+        function _applyHeatColour() {
+            var style = document.documentElement.getAttribute('data-style') || '';
+            var theme = document.documentElement.getAttribute('data-theme') || 'dark';
+            var r, g, b;
+            if (style.startsWith('holo'))    { r=0;   g=229; b=255; }
+            else if (theme === 'forest')     { r=74;  g=222; b=128; }
+            else if (theme === 'sakura')     { r=211; g=145; b=211; }
+            else if (theme === 'crimson')    { r=196; g=77;  b=58;  }
+            else if (theme === 'nord')       { r=136; g=192; b=208; }
+            else if (theme === 'parchment' || theme === 'vellum') { r=166; g=124; b=82; }
+            else { r=77; g=168; b=224; }
+            document.querySelectorAll('.heat-cell').forEach(function(cell) {
+                var tip   = cell.getAttribute('data-tip') || '';
+                var count = parseInt(tip.split(': ')[1]) || 0;
+                if (count > 0) {
+                    var raw  = cell.style.background;
+                    var m    = /rgba\([^)]+,\s*([\d.]+)\)/.exec(raw);
+                    var opac = m ? m[1] : '0.5';
+                    cell.style.background = 'rgba(' + r + ',' + g + ',' + b + ',' + opac + ')';
+                }
+            });
+        }
+
+        /* ── Load on ready ─────────────────────────────────────────── */
+        window.addEventListener('pywebviewready', function() {
+            window.pywebview.api.get_writing_stats().then(renderStats).catch(function(){});
+            /* refresh every 60s while open */
+            setInterval(function() {
+                window.pywebview.api.get_writing_stats().then(renderStats).catch(function(){});
+            }, 60000);
+        });
+
+        /* ── Resize engine ─────────────────────────────────────────── */
+        var _isResizing = false, _resDir = 0, _busy = false, _offX = 0, _offY = 0;
+        function initResize(e, dir) {
+            _isResizing = true; _resDir = dir;
+            _offX = window.innerWidth - e.clientX;
+            _offY = window.innerHeight - e.clientY;
+            document.addEventListener('mousemove', _doResize);
+            document.addEventListener('mouseup', _stopResize);
+            e.preventDefault();
+        }
+        function _doResize(e) {
+            if (!_isResizing || _busy || !window.pywebview) return;
+            _busy = true;
+            var nW = window.innerWidth, nH = window.innerHeight;
+            if (_resDir === 2 || _resDir === 8) nW = e.clientX + _offX;
+            if (_resDir === 6 || _resDir === 8) nH = e.clientY + _offY;
+            var sc = window.devicePixelRatio || 1;
+            window.pywebview.api.resize_satellite('Writing Stats', Math.round(nW * sc), Math.round(nH * sc))
+                .then(function() { _busy = false; }).catch(function() { _busy = false; });
+        }
+        function _stopResize() {
+            _isResizing = false;
+            document.removeEventListener('mousemove', _doResize);
+            document.removeEventListener('mouseup', _stopResize);
+        }
+    </script>
+</body>
+</html>

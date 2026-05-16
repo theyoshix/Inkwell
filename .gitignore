@@ -1,0 +1,44 @@
+# ── Runtime config (contains API keys & machine-specific paths) ──
+inkwell_app_config.json
+
+# ── User data (projects live outside the repo) ──
+inkwell_stats.json
+*.db
+*.sqlite
+
+# ── Build artefacts ──
+Inkwell.exe
+dist/
+build/
+*.spec
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+venv/
+.venv/
+env/
+
+# ── Editor backups & temp files ──
+*.bak
+*.tmp
+*.swp
+*~
+
+# ── OS noise ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE / tooling ──
+.vscode/
+.idea/
+*.code-workspace
+
+# ── Claude Code project settings (local only) ──
+.claude/settings.local.json

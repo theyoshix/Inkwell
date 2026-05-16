@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Character Vault</title>
+    <style>
+        /* --- THEME ENGINE VARIABLES --- */
+        :root {
+            --bg-main: #1A1D23;
+            --bg-surface: #1F222A;
+            --bg-panel: rgba(30, 33, 40, 0.75);
+            --bg-topbar: rgba(26, 29, 35, 0.97);
+
+            --text-main: #D4D4D4;
+            --text-muted: #7A7A7A;
+
+            --accent: #4DA8E0;
+            --accent-alt: rgba(0, 122, 204, 0.4);
+            --accent-bg: rgba(0, 122, 204, 0.15);
+
+            --border-main: rgba(255, 255, 255, 0.05);
+            --border-light: rgba(255, 255, 255, 0.1);
+
+            --danger: #C42B1C;
+
+            --sb-track: transparent;
+            --sb-thumb: rgba(255,255,255,0.07);
+            --sb-thumb-hover: rgba(255,255,255,0.13);
+        }
+
+        /* ── Scrollbars ── */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--sb-track); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--sb-thumb);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--sb-thumb-hover);
+        }
+
+        /* --- LIGHT THEME OVERRIDES --- */
+        [data-theme="light"] {
+            --bg-main: #E9EAEF;
+            --bg-surface: #FFFFFF;
+            --bg-panel: #F1F2F6;
+            --bg-topbar: #FFFFFF;
+
+            --text-main: #1A1C20;
+            --text-muted: #585F6B;
+
+            --accent: #2563EB;
+            --accent-alt: rgba(37, 99, 235, 0.1);
+            --accent-bg: #DBEAFE;
+
+            --border-main: rgba(0, 0, 0, 0.15);
+            --border-light: rgba(0, 0, 0, 0.25);
+
+            --sb-thumb: rgba(0, 0, 0, 0.2);
+            --sb-thumb-hover: rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- OTHER THEME OVERRIDES ---*/
+        [data-theme="parchment"] {
+            --bg-main: #F4ECD8;      /* Warm aged paper */
+            --bg-surface: #EBE1C9;   /* Slightly darker fold */
+            --bg-panel: rgba(235, 225, 201, 0.75);
+            --bg-topbar: rgba(244, 236, 216, 0.97);
+
+            --text-main: #3C3C3C;    /* Deep ink charcoal */
+            --text-muted: #7D705E;   /* Faded pencil */
+
+            --accent: #A67C52;       /* Leather brown */
+            --accent-alt: rgba(166, 124, 82, 0.4);
+            --accent-bg: rgba(166, 124, 82, 0.15);
+
+            --border-main: rgba(0, 0, 0, 0.05);
+            --border-light: rgba(0, 0, 0, 0.1);
+
+            --sb-thumb: rgba(0,0,0,0.1);
+            --sb-thumb-hover: rgba(0,0,0,0.2);
+        }
+
+        [data-theme="nord"] {
+            --bg-main: #2E3440;      /* Arctic Night */
+            --bg-surface: #3B4252;   /* Polar Dusk */
+            --bg-panel: rgba(46, 52, 64, 0.75);
+            --bg-topbar: rgba(46, 52, 64, 0.97);
+
+            --text-main: #ECEFF4;    /* Snow White */
+            --text-muted: #616E88;   /* Frosty Gray */
+
+            --accent: #88C0D0;       /* Frozen Cyan */
+            --accent-alt: rgba(136, 192, 208, 0.4);
+            --accent-bg: rgba(136, 192, 208, 0.15);
+
+            --border-main: rgba(255, 255, 255, 0.03);
+            --border-light: rgba(255, 255, 255, 0.08);
+
+            --sb-thumb: rgba(255,255,255,0.05);
+            --sb-thumb-hover: rgba(255,255,255,0.1);
+        }
+
+        [data-theme="sakura"] {
+            --bg-main: #2D242F;      /* Deep Midnight Plum */
+            --bg-surface: #382D3A;   /* Muted Grape */
+            --bg-panel: rgba(45, 36, 47, 0.75);
+            --bg-topbar: rgba(45, 36, 47, 0.97);
+
+            --text-main: #F8E1F4;    /* Soft Pinkish White */
+            --text-muted: #8A758D;   /* Dusty Lavender */
+
+            --accent: #D391D3;       /* Bright Sakura */
+            --accent-alt: rgba(211, 145, 211, 0.4);
+            --accent-bg: rgba(211, 145, 211, 0.15);
+
+            --border-main: rgba(255, 255, 255, 0.05);
+            --border-light: rgba(255, 255, 255, 0.1);
+
+            --sb-thumb: rgba(211, 145, 211, 0.1);
+            --sb-thumb-hover: rgba(211, 145, 211, 0.2);
+        }
+
+        [data-theme="forest"] {
+            --bg-main: #141E14;      /* Deep Forest Night */
+            --bg-surface: #1B261B;   /* Mossy Shadow */
+            --bg-panel: rgba(20, 30, 20, 0.75);
+            --bg-topbar: rgba(20, 30, 20, 0.97);
+
+            --text-main: #D1D5DB;    /* Misty Gray */
+            --text-muted: #6B7280;   /* Stone Gray */
+
+            --accent: #4ADE80;       /* Fresh Mint */
+            --accent-alt: rgba(74, 222, 128, 0.4);
+            --accent-bg: rgba(74, 222, 128, 0.15);
+
+            --border-main: rgba(255, 255, 255, 0.03);
+            --border-light: rgba(255, 255, 255, 0.08);
+
+            --sb-thumb: rgba(255,255,255,0.05);
+            --sb-thumb-hover: rgba(255,255,255,0.1);
+        }
+
+        /* --- NEW THEME OVERRIDES (Inkwell v2) --- */
+        [data-theme="vellum"] {
+            --bg-main: #E8E0CF; --bg-surface: #E0D6C0;
+            --bg-panel: rgba(216,206,184,0.85); --bg-topbar: rgba(232,224,207,0.97);
+            --text-main: #2C2418; --text-muted: #6B5D48;
+            --accent: #8B5E3C; --accent-alt: rgba(139,94,60,0.35); --accent-bg: rgba(139,94,60,0.12);
+            --border-main: rgba(0,0,0,0.06); --border-light: rgba(0,0,0,0.12);
+            --sb-thumb: rgba(0,0,0,0.15); --sb-thumb-hover: rgba(0,0,0,0.25);
+        }
+        [data-theme="midnight"] {
+            --bg-main: #070A18; --bg-surface: #111530;
+            --bg-panel: rgba(13,16,37,0.85); --bg-topbar: rgba(7,10,24,0.97);
+            --text-main: #C8D8F8; --text-muted: #445068;
+            --accent: #7BA7F0; --accent-alt: rgba(123,167,240,0.35); --accent-bg: rgba(123,167,240,0.12);
+            --border-main: rgba(123,167,240,0.06); --border-light: rgba(123,167,240,0.12);
+            --sb-thumb: rgba(123,167,240,0.1); --sb-thumb-hover: rgba(123,167,240,0.2);
+        }
+        [data-theme="crimson"] {
+            --bg-main: #0E0808; --bg-surface: #1C1010;
+            --bg-panel: rgba(22,12,12,0.85); --bg-topbar: rgba(14,8,8,0.97);
+            --text-main: #F0D8D8; --text-muted: #684848;
+            --accent: #C44D3A; --accent-alt: rgba(196,77,58,0.35); --accent-bg: rgba(196,77,58,0.12);
+            --border-main: rgba(196,77,58,0.08); --border-light: rgba(196,77,58,0.15);
+            --sb-thumb: rgba(196,77,58,0.12); --sb-thumb-hover: rgba(196,77,58,0.22);
+        }
+        [data-theme="monochrome"] {
+            --bg-main: #080808; --bg-surface: #181818;
+            --bg-panel: rgba(17,17,17,0.85); --bg-topbar: rgba(8,8,8,0.97);
+            --text-main: #C8C8C8; --text-muted: #484848;
+            --accent: #A0A0A0; --accent-alt: rgba(160,160,160,0.3); --accent-bg: rgba(160,160,160,0.1);
+            --border-main: rgba(255,255,255,0.05); --border-light: rgba(255,255,255,0.1);
+            --sb-thumb: rgba(255,255,255,0.08); --sb-thumb-hover: rgba(255,255,255,0.15);
+        }
+
+        /* --- BASE STYLES --- */
+        body {
+            margin: 0; padding: 0;
+            background: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- CUSTOM TITLE BAR --- */
+        .top-bar {
+            background: var(--bg-topbar);
+            height: 48px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 0 0 15px;
+            border-bottom: 1px solid var(--border-main);
+        }
+        .drag-title {
+            color: var(--accent); font-weight: bold; font-size: 12px; letter-spacing: 1px;
+            -webkit-app-region: drag;
+            flex-grow: 1;
+            height: 100%; display: flex; align-items: center; cursor: default;
+        }
+        .top-bar-left { padding-left: 8px; -webkit-app-region: no-drag; }
+        .app-title {
+            font-size: 15px;
+            font-weight: 300;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            letter-spacing: 3px;
+            font-family: Georgia, serif;
+            justify-content: center;
+        }
+        .window-controls {
+            display: flex;
+            align-items: center;
+            height: 48px;
+            -webkit-app-region: no-drag;
+            justify-content: flex-end;
+        }
+        .wc-btn {
+            width: 46px; height: 48px; display: flex; align-items: center;
+            justify-content: center; background: transparent; border: none;
+            color: var(--text-muted); font-size: 13px; cursor: pointer; padding: 0;
+            transition: background 0.15s ease, color 0.15s ease;
+            -webkit-app-region: no-drag;
+        }
+        .wc-btn:hover { background: var(--border-light); color: var(--text-main); border: none; }
+        .wc-close:hover { background: #C42B1C !important; color: #FFFFFF !important; }
+
+        /* --- TOP BAR BUTTONS & HOVER STATES --- */
+        .menu-btn {
+            background: transparent;
+            color: var(--text-main);
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0 15px;
+            height: 100%;
+            -webkit-app-region: no-drag;
+            transition: background 0.2s, color 0.2s;
+        }
+        .menu-btn:hover {
+            background: var(--border-light);
+            color: #FFFFFF;
+        }
+
+        .wc-btn.pinned {
+            color: var(--accent) !important;
+            background: var(--accent-bg) !important;
+        }
+
+        /* ── HOLOGRAM THEME ─────────────────────────────────────── */
+        [data-style^="holo"] {
+            --bg-main:        #000810;
+            --bg-surface:     #001428;
+            --bg-panel:       rgba(0, 18, 40, 0.92);
+            --bg-topbar:      rgba(0, 6, 16, 0.96);
+            --text-main:      #A8E8FF;
+            --text-muted:     #2D6880;
+            --accent:         #00E5FF;
+            --accent-alt:     rgba(0, 229, 255, 0.15);
+            --accent-bg:      rgba(0, 229, 255, 0.08);
+            --border-main:    rgba(0, 229, 255, 0.08);
+            --border-light:   rgba(0, 229, 255, 0.18);
+            --sb-thumb:       rgba(0, 229, 255, 0.18);
+            --sb-thumb-hover: rgba(0, 229, 255, 0.38);
+        }
+        [data-style^="holo"] .top-bar {
+            border-bottom: 1px solid rgba(0, 229, 255, 0.14) !important;
+            box-shadow: 0 1px 14px rgba(0, 229, 255, 0.06);
+        }
+        [data-style^="holo"] .drag-title {
+            color: #00E5FF !important;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.55);
+            letter-spacing: 2px;
+        }
+        [data-style^="holo"] .sidebar {
+            border-right: 1px solid rgba(0, 229, 255, 0.10) !important;
+        }
+        [data-style^="holo"] .sidebar-header {
+            border-bottom: 1px solid rgba(0, 229, 255, 0.08) !important;
+        }
+        [data-style^="holo"] input.title-input {
+            color: #00E5FF !important;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.45);
+            border-bottom-color: rgba(0, 229, 255, 0.30) !important;
+        }
+        [data-style^="holo"] .form-group {
+            border-left-color: rgba(0, 229, 255, 0.25) !important;
+        }
+        [data-style^="holo"] ::-webkit-scrollbar { width: 2px; height: 2px; }
+        [data-style^="holo"] ::-webkit-scrollbar-thumb {
+            background: rgba(0, 229, 255, 0.28);
+            border-radius: 0;
+            box-shadow: 0 0 4px rgba(0, 229, 255, 0.5);
+        }
+        [data-style^="holo"] ::-webkit-scrollbar-track { background: transparent; }
+        [data-style^="holo"] .wc-btn.pinned {
+            color: #00E5FF !important;
+            background: rgba(0, 229, 255, 0.10) !important;
+        }
+
+        /* --- MAIN LAYOUT WRAPPER --- */
+        .app-content {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 48px);
+        }
+
+        /* --- LEFT SIDEBAR (The List) --- */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-surface);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border-main);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header { padding: 15px; border-bottom: 1px solid var(--border-main); display: flex; justify-content: space-between; align-items: center; }
+        .char-list { flex: 1; overflow-y: auto; padding: 10px; }
+        .char-item { padding: 10px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; transition: background 0.2s; }
+        .char-item:hover { background: var(--bg-surface); }
+        .char-item.active { background: var(--accent-alt); color: var(--text-main); }
+        .char-avatar-mini { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-main); object-fit: cover; }
+        .char-web-btn {
+            background: none; border: none; outline: none; cursor: pointer;
+            font-size: 13px; padding: 2px 4px; border-radius: 4px;
+            opacity: 0; transition: opacity 0.15s; margin-left: auto; flex-shrink: 0;
+        }
+        .char-item:hover .char-web-btn { opacity: 0.7; }
+        .char-web-btn:hover { opacity: 1 !important; background: rgba(0,229,255,0.1); }
+
+        /* --- RIGHT MAIN PANE (The Profile) --- */
+        .main-pane { flex: 1; padding: 30px; overflow-y: auto; display: none; }
+        .main-pane.active { display: block; }
+        .header-area { display: flex; gap: 20px; align-items: flex-end; margin-bottom: 25px; }
+        .avatar-large { width: 100px; height: 100px; border-radius: 50%; background: var(--bg-surface); border: 2px solid var(--accent); object-fit: cover; }
+
+        /* --- INPUTS & FORMS --- */
+        input, textarea, select { width: 100%; background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-main); padding: 10px; margin-top: 5px; border-radius: 4px; font-family: inherit; box-sizing: border-box; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); }
+
+        input.title-input { font-size: 24px; font-weight: bold; border: none; background: transparent; padding: 0; border-bottom: 1px dashed var(--text-muted); border-radius: 0; margin-bottom: 5px; color: var(--accent); }
+        input.title-input:focus { border-bottom-color: var(--accent); border-bottom-style: solid; }
+
+        /* Mini Tabs */
+        .form-group { margin-bottom: 20px; background: var(--bg-surface); padding: 15px; border-radius: 5px; border-left: 3px solid var(--accent-alt); }
+        label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- BUTTONS --- */
+        .btn { background: var(--accent-alt); color: white; border: none; padding: 8px 15px; border-radius: 3px; cursor: pointer; font-size: 13px; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.8; }
+        .btn-danger { background: var(--danger); }
+        .add-btn {
+            background: transparent; color: var(--accent); border: 1px dashed var(--accent);
+            padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;
+            transition: 0.2s;
+        }
+        .add-btn:hover { background: var(--accent-bg); }
+
+        /* --- INVISIBLE NATIVE RESIZE ZONES --- */
+        .resize-r { position: fixed; right: 0; top: 48px; width: 12px; height: calc(100vh - 48px); cursor: ew-resize; z-index: 99999; }
+        .resize-b { position: fixed; bottom: 0; left: 0; width: 100vw; height: 12px; cursor: ns-resize; z-index: 99999; }
+        .resize-br { position: fixed; bottom: 0; right: 0; width: 20px; height: 20px; cursor: nwse-resize; z-index: 100000; }
+
+        #charSearch:focus {
+            border-color: var(--accent-alt) !important;
+            background: var(--bg-main) !important;
+        }
+
+        /* --- IMAGE DROPZONE --- */
+        .avatar-dropzone {
+            width: 100%; height: 200px;
+            background: var(--bg-panel);
+            border: 2px dashed var(--border-light);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; position: relative;
+            margin-bottom: 10px; transition: all 0.2s ease;
+        }
+        .avatar-dropzone.dragover {
+            border-color: var(--accent);
+            background: var(--accent-bg);
+        }
+        .avatar-dropzone img {
+            max-width: 100%; max-height: 100%; object-fit: contain; z-index: 2;
+        }
+        .dropzone-text {
+            position: absolute; text-align: center; color: var(--text-muted); z-index: 1; pointer-events: none;
+        }
+
+        /* --- TIPTAP EDITOR STYLES --- */
+        .tt-toolbar {
+            display: flex;
+            gap: 2px;
+            padding: 4px 6px;
+            background: var(--bg-main);
+            border: 1px solid var(--border-main);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+        .tt-btn {
+            padding: 3px 9px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            transition: all 0.15s;
+            line-height: 1.5;
+        }
+        .tt-btn:hover, .tt-btn.is-active {
+            background: var(--accent-bg);
+            border-color: var(--accent-alt);
+            color: var(--accent);
+        }
+        .tt-sep {
+            display: inline-block;
+            width: 1px;
+            background: var(--border-light);
+            margin: 2px 4px;
+            align-self: stretch;
+        }
+        .tt-editor {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-main);
+            border-radius: 0 0 4px 4px;
+            min-height: 70px;
+            padding: 8px 10px;
+            cursor: text;
+            transition: border-color 0.2s;
+        }
+        .tt-editor:focus-within {
+            border-color: var(--accent-alt);
+        }
+        .tt-editor .ProseMirror {
+            outline: none;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.7;
+            min-height: 50px;
+        }
+        .tt-editor .ProseMirror p { margin: 0 0 0.4em 0; }
+        .tt-editor .ProseMirror p:last-child { margin-bottom: 0; }
+        .tt-editor .ProseMirror > p:only-child:empty::before {
+            content: attr(data-placeholder);
+            color: var(--text-muted);
+            pointer-events: none;
+            float: left;
+            height: 0;
+        }
+
+        /* ─── Custom Tooltip ─────────────────────────────────────────── */
+        #ik-tip {
+            position: fixed; z-index: 999999; pointer-events: none;
+            background: rgba(18, 20, 28, 0.96); color: #CDD0E0;
+            font-size: 11px; font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 5px 9px; border-radius: 5px; white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.45);
+            opacity: 0; transition: opacity 0.12s; letter-spacing: 0.02em;
+            max-width: 240px; white-space: normal; line-height: 1.4;
+        }
+        #ik-tip.visible { opacity: 1; }
+        [data-style^="holo"] #ik-tip {
+            background: rgba(2, 8, 20, 0.97); color: #A8E8FF;
+            border-color: rgba(0, 229, 255, 0.2);
+            box-shadow: 0 0 12px rgba(0,229,255,0.08), 0 4px 16px rgba(0,0,0,0.5);
+        }
+    </style>
+    <script>
+    /* Apply holo skin synchronously before first paint — no flash */
+    (function() {
+        var m = window._injectedHoloMode || 'off';
+        if (m !== 'off') document.documentElement.setAttribute('data-style', m);
+    })();
+    </script>
+    <script type="module">
+        import { Editor } from 'https://esm.sh/@tiptap/core@2';
+        import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2';
+        import Underline from 'https://esm.sh/@tiptap/extension-underline@2';
+        window._TipTap = { Editor, StarterKit, Underline };
+        document.dispatchEvent(new CustomEvent('tiptap-loaded'));
+    </script>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="drag-title pywebview-drag-region"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:5px"><path d="M2 2h7a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/><path d="M9 2a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2"/><line x1="3" y1="5" x2="7" y2="5"/><line x1="3" y1="7.5" x2="7" y2="7.5"/><line x1="3" y1="10" x2="5.5" y2="10"/></svg> CHARACTER BIBLE</div>
+        <div class="window-controls">
+            <button class="wc-btn" id="vaultPinBtn" onclick="toggleVaultPin()" data-tip="Pin window (always on top)" style="font-size:11px;"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 1h3l.5 3.5L11 6v1H7.5L7 12H6L5.5 7H2V6l2.5-1.5z"/><line x1="6.5" y1="7" x2="6.5" y2="12"/></svg></button>
+            <button class="wc-btn" onclick="minVault()" data-tip="Minimize">─</button>
+            <button class="wc-btn" onclick="maxVault()" data-tip="Maximize">□</button>
+            <button class="wc-btn wc-close" onclick="closeVault()" data-tip="Close">✕</button>
+        </div>
+    </div>
+
+    <div class="app-content">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <span>Characters</span>
+                <button class="add-btn" id="addCharBtn">+ New</button>
+            </div>
+
+            <div class="search-container" style="padding: 10px 15px 5px 15px;">
+                <input type="text" id="charSearch" placeholder="Search characters..." oninput="renderCharacterList()" 
+                    style="width: 100%; box-sizing: border-box; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 4px; padding: 8px 10px; color: #fff; font-size: 12px; outline: none; transition: border-color 0.2s;">
+            </div>
+
+            <ul class="character-list" id="charList"></ul>
+    </div>
+
+        <div class="main-pane" id="profile-editor">
+            <div class="form-group">
+                <label>CHARACTER NAME</label>
+                <input type="text" id="f-name" placeholder="Enter name..." oninput="autoSave()">
+            </div>
+
+            <div class="form-group">
+                <label>ROLE</label>
+                <select id="f-role" onchange="autoSave()">
+                    <option>Protagonist</option>
+                    <option>Antagonist</option>
+                    <option>Supporting</option>
+                    <option>Background</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>CHARACTER PORTRAIT</label>
+                <div id="avatarDropZone" class="avatar-dropzone">
+                    <img id="f-avatar-img" src="" style="display: none;">
+                    <div class="dropzone-text" id="dropzoneText">
+                        <span style="display:block;margin-bottom:4px;color:var(--accent)"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="18" height="6" rx="1"/><path d="M11 2v9m-4-3.5L11 11l4-3.5"/></svg></span>
+                        Drag & Drop Image Here<br>
+                        <span style="font-size: 10px; color: var(--text-muted);">(or paste web URL below)</span>
+                    </div>
+                </div>
+                <input type="text" id="f-avatar-url" placeholder="Filename or http://..." oninput="autoSave(); updateAvatar();">
+            </div>
+
+            <div class="form-group" style="border-left-color: #4DA8E0;">
+                <label>At a Glance (Age, Appearance, Vibe)</label>
+                <div class="tt-toolbar">
+                    <button class="tt-btn" data-cmd="bold" data-target="glance"><b>B</b></button>
+                    <button class="tt-btn" data-cmd="italic" data-target="glance"><i>I</i></button>
+                    <button class="tt-btn" data-cmd="underline" data-target="glance"><u>U</u></button>
+                    <button class="tt-btn" data-cmd="strike" data-target="glance"><s>S</s></button>
+                </div>
+                <div id="f-glance" class="tt-editor"></div>
+            </div>
+
+            <div class="form-group" style="border-left-color: #C42B1C;">
+                <label>Psychology (Flaws, Fears, Secrets)</label>
+                <div class="tt-toolbar">
+                    <button class="tt-btn" data-cmd="bold" data-target="psych"><b>B</b></button>
+                    <button class="tt-btn" data-cmd="italic" data-target="psych"><i>I</i></button>
+                    <button class="tt-btn" data-cmd="underline" data-target="psych"><u>U</u></button>
+                    <button class="tt-btn" data-cmd="strike" data-target="psych"><s>S</s></button>
+                </div>
+                <div id="f-psych" class="tt-editor"></div>
+            </div>
+
+            <div class="form-group" style="border-left-color: #c586c0;">
+                <label>The Arc (Goals & Growth)</label>
+                <div class="tt-toolbar">
+                    <button class="tt-btn" data-cmd="bold" data-target="arc"><b>B</b></button>
+                    <button class="tt-btn" data-cmd="italic" data-target="arc"><i>I</i></button>
+                    <button class="tt-btn" data-cmd="underline" data-target="arc"><u>U</u></button>
+                    <button class="tt-btn" data-cmd="strike" data-target="arc"><s>S</s></button>
+                </div>
+                <div id="f-arc" class="tt-editor"></div>
+            </div>
+
+            <div class="form-group" style="border-left-color: #E5A84B;">
+                <label>Voice &amp; Tone (How they speak, quirks, cadence)</label>
+                <div class="tt-toolbar">
+                    <button class="tt-btn" data-cmd="bold" data-target="voice"><b>B</b></button>
+                    <button class="tt-btn" data-cmd="italic" data-target="voice"><i>I</i></button>
+                    <button class="tt-btn" data-cmd="underline" data-target="voice"><u>U</u></button>
+                    <button class="tt-btn" data-cmd="strike" data-target="voice"><s>S</s></button>
+                </div>
+                <div id="f-voice" class="tt-editor"></div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:4px;padding-left:2px;">
+                    This is auto-injected into Lunaris when this character appears in the active chapter.
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+                <button class="btn btn-danger" onclick="deleteCurrentCharacter()">Delete Character</button>
+                <span id="save-status" style="color: var(--text-muted); font-size: 12px; align-self: center;">All changes saved locally.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let db = { characters: [] };
+        let activeId = null;
+        let charEditors = {};
+        let _ttReady = false;
+
+        function initCharEditors() {
+            if (!window._TipTap) return;
+            const { Editor, StarterKit, Underline } = window._TipTap;
+
+            ['glance', 'psych', 'arc', 'voice'].forEach(function(field) {
+                const el = document.getElementById('f-' + field);
+                if (!el || charEditors[field]) return;
+                charEditors[field] = new Editor({
+                    element: el,
+                    extensions: [StarterKit, Underline],
+                    content: '',
+                    onUpdate: function() { autoSave(); },
+                    onTransaction: function(ctx) {
+                        document.querySelectorAll('.tt-btn[data-target="' + field + '"]').forEach(function(btn) {
+                            var cmd = btn.dataset.cmd;
+                            var active =
+                                cmd === 'bold'      ? ctx.editor.isActive('bold') :
+                                cmd === 'italic'    ? ctx.editor.isActive('italic') :
+                                cmd === 'underline' ? ctx.editor.isActive('underline') :
+                                cmd === 'strike'    ? ctx.editor.isActive('strike') : false;
+                            btn.classList.toggle('is-active', active);
+                        });
+                    }
+                });
+            });
+
+            document.querySelectorAll('.tt-btn').forEach(function(btn) {
+                btn.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                    var target = btn.dataset.target;
+                    var cmd    = btn.dataset.cmd;
+                    var ed     = charEditors[target];
+                    if (!ed) return;
+                    var chain = ed.chain().focus();
+                    if      (cmd === 'bold')      chain.toggleBold().run();
+                    else if (cmd === 'italic')    chain.toggleItalic().run();
+                    else if (cmd === 'underline') chain.toggleUnderline().run();
+                    else if (cmd === 'strike')    chain.toggleStrike().run();
+                });
+            });
+        }
+
+        document.addEventListener('tiptap-loaded', function() {
+            _ttReady = true;
+            initCharEditors();
+        });
+
+        // Load Data on Startup
+        window.addEventListener('pywebviewready', function() {
+            // Ask Python for the lore files specifically
+            window.pywebview.api.get_project_lore().then(data => {
+                if(data) {
+                    db.characters = data.characters || [];
+                    renderCharacterList();
+                }
+            });
+        });
+
+        function renderCharacterList() {
+            const list = document.getElementById('charList');
+            const searchInput = document.getElementById('charSearch');
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+
+            list.innerHTML = '';
+
+            db.characters.forEach((char) => {
+                const name = (char.name || "Unnamed").toLowerCase();
+
+                // Filter logic
+                if (searchTerm === "" || name.includes(searchTerm)) {
+                    const li = document.createElement('li');
+                    li.className = 'char-item ' + (char.id === activeId ? 'active' : '');
+
+                    // 1. Create the image element programmatically
+                    const img = document.createElement('img');
+                    img.className = 'char-avatar-mini';
+                    img.style.display = 'none'; // Hide initially until data loads
+
+                    // 2. Create the name span
+                    const span = document.createElement('span');
+                    span.textContent = char.name || 'Unnamed';
+
+                    // 3. Determine how to load the image
+                    const avatarSource = char.avatar || '';
+
+                    if (avatarSource.startsWith('http') || avatarSource.startsWith('data:')) {
+                        // It's a web URL or old base64 string, load directly
+                        img.src = avatarSource;
+                        img.style.display = 'block';
+                    } else if (avatarSource) {
+                        // It's a local filename. Ask Python to read it!
+                        window.pywebview.api.load_image_asset(avatarSource).then(base64data => {
+                            if (base64data) {
+                                img.src = base64data;
+                                img.style.display = 'block';
+                            }
+                        });
+                    }
+
+                    // 4. Relationship web shortcut button
+                    const webBtn = document.createElement('button');
+                    webBtn.dataset.tip = 'View in Relationship Web';
+                    webBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="1.8"/><circle cx="2.5" cy="2.5" r="1.4"/><circle cx="11.5" cy="2.5" r="1.4"/><circle cx="2.5" cy="11.5" r="1.4"/><circle cx="11.5" cy="11.5" r="1.4"/><line x1="3.8" y1="3.8" x2="5.6" y2="5.6"/><line x1="10.2" y1="3.8" x2="8.4" y2="5.6"/><line x1="3.8" y1="10.2" x2="5.6" y2="8.4"/><line x1="10.2" y1="10.2" x2="8.4" y2="8.4"/></svg>';
+                    webBtn.className = 'char-web-btn';
+                    webBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        if (window.pywebview && window.pywebview.api)
+                            window.pywebview.api.open_relationship_web_focused(char.id);
+                    };
+
+                    // 5. Assemble the list item
+                    li.appendChild(img);
+                    li.appendChild(span);
+                    li.appendChild(webBtn);
+                    li.onclick = () => loadProfile(char.id);
+                    list.appendChild(li);
+                }
+            });
+        }
+
+        // Wire up the Add Button
+        document.getElementById('addCharBtn').onclick = createNewCharacter;
+
+        function createNewCharacter() {
+            const newChar = {
+                id: Date.now().toString(),
+                name: 'New Character',
+                role: 'Supporting',
+                avatar: '',
+                glance: '',
+                psych: '',
+                arc: '',
+                voice: ''
+            };
+            if(!db.characters) db.characters = [];
+            db.characters.push(newChar);
+            loadProfile(newChar.id);
+            autoSave();
+        }
+
+        function loadProfile(id) {
+            if (!charEditors['glance']) {
+                setTimeout(function() { loadProfile(id); }, 80);
+                return;
+            }
+            activeId = id;
+            const char = db.characters.find(c => c.id === id);
+            if (!char) return;
+
+            document.getElementById('profile-editor').classList.add('active');
+
+            document.getElementById('f-name').value = char.name;
+            document.getElementById('f-role').value = char.role;
+            document.getElementById('f-avatar-url').value = char.avatar;
+
+            charEditors['glance'].commands.setContent(char.glance || '');
+            charEditors['psych'].commands.setContent(char.psych  || '');
+            charEditors['arc'].commands.setContent(char.arc    || '');
+            charEditors['voice'].commands.setContent(char.voice  || '');
+
+            updateAvatar();
+            renderCharacterList();
+        }
+
+        // --- UPGRADED FUNCTIONS ---
+        function updateAvatar() {
+            const urlOrFilename = document.getElementById('f-avatar-url').value;
+            const img = document.getElementById('f-avatar-img');
+            const text = document.getElementById('dropzoneText');
+
+            if (!urlOrFilename) {
+                img.style.display = 'none';
+                text.style.display = 'block';
+                return;
+            }
+
+            // If it's a web URL, load normally. Otherwise, ask Python for the local file!
+            if (urlOrFilename.startsWith('http') || urlOrFilename.startsWith('data:')) {
+                img.src = urlOrFilename;
+                img.style.display = 'block';
+                text.style.display = 'none';
+            } else {
+                // Ask Python to read the raw file and stream it to the UI
+                window.pywebview.api.load_image_asset(urlOrFilename).then(base64data => {
+                    if (base64data) {
+                        img.src = base64data;
+                        img.style.display = 'block';
+                        text.style.display = 'none';
+                    } else {
+                        img.style.display = 'none';
+                        text.style.display = 'block';
+                    }
+                });
+            }
+        }
+
+        function deleteCurrentCharacter() {
+            if(confirm("Are you sure you want to delete this character?")) {
+                const char = db.characters.find(c => c.id === activeId);
+
+                // Tell Python to shred the image file if it's stored locally
+                if (char && char.avatar && !char.avatar.startsWith('http') && !char.avatar.startsWith('data:')) {
+                    window.pywebview.api.delete_image_asset(char.avatar);
+                }
+
+                db.characters = db.characters.filter(c => c.id !== activeId);
+                activeId = null;
+                document.getElementById('profile-editor').classList.remove('active');
+                autoSave();
+            }
+        }
+
+        // --- DRAG AND DROP ENGINE ---
+        const dropZone = document.getElementById('avatarDropZone');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+
+            if (!activeId) return; // Must have a character open!
+
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                document.getElementById('dropzoneText').innerHTML = "Saving...";
+
+                reader.onload = (event) => {
+                    const dataUrl = event.target.result;
+
+                    // Hand the image to Python to save to the hard drive
+                    window.pywebview.api.save_image_asset(dataUrl, file.name).then(filename => {
+                        if (filename) {
+                            document.getElementById('f-avatar-url').value = filename;
+                            document.getElementById('dropzoneText').innerHTML = '<span style="display:block;margin-bottom:4px;color:var(--accent)"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="18" height="6" rx="1"/><path d="M11 2v9m-4-3.5L11 11l4-3.5"/></svg></span>Drag &amp; Drop Image Here'; // Reset text
+                            autoSave(); // Save the new filename to the database
+                            updateAvatar(); // Refresh the screen
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function autoSave() {
+            if (!activeId) return;
+
+            const char = db.characters.find(c => c.id === activeId);
+            if(!char) return;
+
+            char.name   = document.getElementById('f-name').value;
+            char.role   = document.getElementById('f-role').value;
+            char.avatar = document.getElementById('f-avatar-url').value;
+            char.glance = charEditors['glance'] ? charEditors['glance'].getHTML() : (char.glance || '');
+            char.psych  = charEditors['psych']  ? charEditors['psych'].getHTML()  : (char.psych  || '');
+            char.arc    = charEditors['arc']    ? charEditors['arc'].getHTML()    : (char.arc    || '');
+            char.voice  = charEditors['voice']  ? charEditors['voice'].getHTML()  : (char.voice  || '');
+
+            renderCharacterList();
+
+            const status = document.getElementById('save-status');
+            status.textContent = "Saving...";
+            window.pywebview.api.save_characters(db.characters).then(() => {
+                setTimeout(() => status.textContent = "All changes saved locally.", 500);
+            });
+
+            // Push name/avatar change to Relationship Web if it's open
+            if (window.pywebview && window.pywebview.api && window.pywebview.api.notify_web_character_update) {
+                window.pywebview.api.notify_web_character_update(char.id, char.name, char.avatar);
+            }
+        }
+
+        // Called by Python when vault is opened via open_character_in_vault()
+        window.focusOnCharacter = function(charId) {
+            loadProfile(charId);
+        };
+
+        window.syncTheme = function(newTheme) {
+            if (newTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', newTheme);
+            }
+        };
+
+        window.syncHoloMode = function(mode) {
+            if (!mode || mode === 'off') {
+                document.documentElement.removeAttribute('data-style');
+            } else {
+                document.documentElement.setAttribute('data-style', mode);
+            }
+        };
+
+        // --- CUSTOM WINDOW CONTROLS ---
+        function minVault() { window.pywebview.api.minimize_satellite('Character Vault'); }
+        function maxVault() { window.pywebview.api.maximize_satellite('Character Vault'); }
+        function closeVault() { window.pywebview.api.close_satellite_window('Character Vault'); }
+
+        var _vaultPinned = false;
+        function toggleVaultPin() {
+            _vaultPinned = !_vaultPinned;
+            var btn = document.getElementById('vaultPinBtn');
+            if (btn) {
+                btn.classList.toggle('pinned', _vaultPinned);
+                btn.dataset.tip = _vaultPinned ? 'Unpin window' : 'Pin window (always on top)';
+            }
+            if (window.pywebview && window.pywebview.api)
+                window.pywebview.api.toggle_pin('Character Vault', _vaultPinned);
+        }
+
+        // ── Custom tooltip engine ──────────────────────────────────────
+        (function() {
+            var tip = document.createElement('div');
+            tip.id = 'ik-tip';
+            document.body.appendChild(tip);
+            var _tid = null;
+
+            document.addEventListener('mouseover', function(e) {
+                var el = e.target.closest('[data-tip]');
+                if (!el) return;
+                clearTimeout(_tid);
+                tip.textContent = el.dataset.tip;
+                _tid = setTimeout(function() {
+                    var r = el.getBoundingClientRect();
+                    var left = r.left + r.width / 2;
+                    var top  = r.bottom + 6;
+                    tip.style.left = '0px'; tip.style.top = '0px';
+                    tip.style.visibility = 'hidden'; tip.style.opacity = '0';
+                    tip.classList.add('visible');
+                    var tw = tip.offsetWidth, th = tip.offsetHeight;
+                    left = Math.max(8, Math.min(left - tw/2, window.innerWidth - tw - 8));
+                    if (top + th > window.innerHeight - 8) top = r.top - th - 6;
+                    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+                    tip.style.visibility = ''; tip.classList.add('visible');
+                }, 280);
+            });
+
+            document.addEventListener('mouseout', function(e) {
+                var el = e.target.closest('[data-tip]');
+                if (!el) return;
+                clearTimeout(_tid);
+                tip.classList.remove('visible');
+            });
+
+            document.addEventListener('mousedown', function() {
+                clearTimeout(_tid);
+                tip.classList.remove('visible');
+            });
+        })();
+    </script>   
+    <div class="resize-r" onmousedown="initResize(event, 2)"></div>
+    <div class="resize-b" onmousedown="initResize(event, 6)"></div>
+    <div class="resize-br" onmousedown="initResize(event, 8)"></div>
+
+    <script>
+        let isResizing = false;
+        let resDir = 0;
+        let isEngineBusy = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        function initResize(e, dir) {
+            isResizing = true; 
+            resDir = dir;
+
+            // Calculate the exact micro-distance from the mouse to the actual window edge
+            offsetX = window.innerWidth - e.clientX;
+            offsetY = window.innerHeight - e.clientY;
+
+            document.addEventListener('mousemove', doResize);
+            document.addEventListener('mouseup', stopResize);
+            e.preventDefault();
+        }
+
+        function doResize(e) {
+            if (!isResizing) return;
+
+            if (!isEngineBusy && window.pywebview && window.pywebview.api) {
+                isEngineBusy = true; 
+
+                let nW = window.innerWidth; 
+                let nH = window.innerHeight;
+
+                // Set the new logical width to exactly where your mouse is!
+                if (resDir === 2 || resDir === 8) nW = e.clientX + offsetX;
+                if (resDir === 6 || resDir === 8) nH = e.clientY + offsetY;
+
+                // THE MAGIC BULLET: Convert Logical Pixels to OS Physical Pixels
+                let scale = window.devicePixelRatio || 1;
+                let targetW = Math.round(nW * scale);
+                let targetH = Math.round(nH * scale);
+
+                window.pywebview.api.resize_satellite('Character Vault', targetW, targetH).then(() => {
+                    isEngineBusy = false; 
+                }).catch(() => {
+                    isEngineBusy = false; 
+                });
+            }
+        }
+
+        function stopResize() {
+            isResizing = false;
+            document.removeEventListener('mousemove', doResize);
+            document.removeEventListener('mouseup', stopResize);
+        }
+
+        function stopResize() {
+            isResizing = false;
+            document.removeEventListener('mousemove', doResize);
+            document.removeEventListener('mouseup', stopResize);
+        } // <--- MOVE THE BRACKET HERE!
+
+    </script>
+</body>
+</html>
