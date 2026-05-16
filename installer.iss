@@ -64,7 +64,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Tasks]
 ; Desktop shortcut is opt-in (checked by default)
 Name: "desktopicon"; Description: "Create a &desktop shortcut"; \
-    GroupDescription: "Additional icons:"; Flags: checked
+    GroupDescription: "Additional icons:"
 
 [Files]
 ; The single bundled executable — that's all we need
