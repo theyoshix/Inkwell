@@ -27,7 +27,7 @@ A desktop creative writing application built with Python, pywebview, TipTap, Thr
 
 ```bash
 # 1. Clone
-git clone https://github.com/YOUR_USERNAME/inkwell.git
+git clone https://github.com/theyoshix/inkwell.git
 cd inkwell
 
 # 2. Install dependencies
