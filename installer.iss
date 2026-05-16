@@ -11,7 +11,7 @@
 
 #define AppName      "Inkwell"
 #define AppPublisher "Cecil & Lunaris"
-#define AppURL       "https://github.com/theyoshix/inkwell"
+#define AppURL       "https://github.com/theyoshix/Inkwell"
 #define ExeFile      "dist\Inkwell.exe"
 
 ; Read version from the built exe's ProductVersion resource

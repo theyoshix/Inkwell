@@ -10,7 +10,7 @@ Built with Python, pywebview, TipTap, Three.js, and GSAP.
 
 Inkwell is designed to be completely plug-and-play. No Python, no command line, no dependencies.
 
-1. Download the latest `Inkwell-Setup-x.x.x.exe` from the [Releases](https://github.com/theyoshix/inkwell/releases) page.
+1. Download the latest `Inkwell-Setup-x.x.x.exe` from the [Releases](https://github.com/theyoshix/Inkwell/releases) page.
 2. Run the installer and launch Inkwell from the Start Menu or desktop shortcut.
 3. *Note: Windows SmartScreen may flag the installer on first launch. Click **More info** → **Run anyway**.*
 
@@ -46,7 +46,7 @@ Inkwell is designed to be completely plug-and-play. No Python, no command line, 
 
 ```bash
 # 1. Clone
-git clone https://github.com/theyoshix/inkwell.git
+git clone https://github.com/theyoshix/Inkwell.git
 cd inkwell
 
 # 2. Install dependencies
