@@ -10,7 +10,8 @@ inkwell_stats.json
 Inkwell.exe
 dist/
 build/
-*.spec
+# Note: Inkwell.spec is tracked — only ignore third-party auto-generated specs
+*.spec.bak
 
 # ── Python ──
 __pycache__/
